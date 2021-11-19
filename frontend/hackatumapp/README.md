@@ -1,4 +1,4 @@
-# hackatum_flutter
+# hackatumapp
 
 A new Flutter project.
 

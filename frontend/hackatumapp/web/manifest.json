@@ -1,6 +1,6 @@
 {
-    "name": "hackatum_flutter",
-    "short_name": "hackatum_flutter",
+    "name": "hackatumapp",
+    "short_name": "hackatumapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,4 +1,4 @@
-package com.example.hackatum_flutter
+package com.tmenzel.hackatumapp
 
 import io.flutter.embedding.android.FlutterActivity
 
