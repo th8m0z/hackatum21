@@ -104,6 +104,29 @@ class Recipe {
       this.veryHealthy,
       this.veryPopular});
 
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "title": title,
+      "image": image,
+      "imageType": imageType,
+      "healthScore": healthScore,
+      "pricePerServing": pricePerServing,
+      "vegetarian": vegetarian,
+      "vegan": vegan,
+      "veryHealthy": veryHealthy,
+      "veryPopular": veryPopular,
+      "glutenFree": glutenFree,
+      "dairyFree": dairyFree,
+      "cheap": cheap,
+      "sustainable": sustainable,
+      "usedIngredients": usedIngredients.toList(),
+      "usedIngredientsCount": usedIngredientCount,
+      "missedIngredients": missedIngredients.toList(),
+      "missedIngredientsCount": missedIngredientCount
+    };
+  }
+
   // factory Recipe.fromMap(Map<String, dynamic> data) {
   //   return Recipe(
   //     glutenFree: data["glutenFree"],

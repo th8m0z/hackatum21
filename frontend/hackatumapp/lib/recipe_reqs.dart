@@ -1,9 +1,9 @@
 import 'dart:convert' as convert;
-import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 // spoonacular
 const apiBase = "api.spoonacular.com";
@@ -15,134 +15,137 @@ const findByIngredientsRoute = "/recipes/findByIngredients";
 const internalApiBase = "192.168.178.24:5000";
 const recipeCO2Route = "/recipe_co2_score";
 
-// util
-List<Recipe> processRecipe(List recipeObjsRaw, bool amountIsInt) {
-  List<Recipe> recipeObjsProcessed = [];
-  for (var recipe in recipeObjsRaw) {
-    // used ingredients
-    List<Ingredient> usedIngredients = [];
-    for (var ingredient in recipe["usedIngredients"]) {
-      usedIngredients.add(new Ingredient(
-        id: ingredient["id"],
-        amount:
-            amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
-        unit: ingredient["unit"],
-        aisle: ingredient["aisle"],
-        name: ingredient["name"],
-        image: ingredient["image"],
-        meta: ingredient["meta"].cast<String>(),
+class ExternalAPI {
+  Future<List<Recipe>> getSelectedRecipes(
+      String q, List<Ingredient> existingIngredients) async {
+    var includeIngredients =
+    existingIngredients.map((ingredient) => ingredient.name).join(",");
+
+    final queryParameters = {
+      "apiKey": apiKey,
+      "fillIngredients": "true",
+      "sort": "max-used-ingredients",
+      "includeIngredients": includeIngredients,
+      "instructionsRequired": "true",
+      "addRecipeNutrition": "true",
+      "addRecipeInformation": "true",
+      "number": "10",
+      "query": q
+    };
+    final uri = Uri.https(apiBase, searchRoute, queryParameters);
+    final res = await http.get(uri);
+
+    if (res.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
+      List recipeObjsRaw = jsonResponse["results"];
+
+      return _processRecipe(recipeObjsRaw, false);
+    } else {
+      print('Request failed with status: ${res.statusCode}.');
+    }
+  }
+
+  Future<List<Recipe>> getCookableRecipes(
+      List<Ingredient> existingIngredients) async {
+    var includeIngredients =
+    existingIngredients.map((ingredient) => ingredient.name).join(",");
+
+    final queryParameters = {
+      "apiKey": apiKey,
+      "ingredients": includeIngredients,
+      "number": "10",
+      "instructionsRequired": "true",
+      "addRecipeNutrition": "true",
+      "addRecipeInformation": "true",
+      "ranking": "1"
+    };
+
+    final uri = Uri.https(apiBase, findByIngredientsRoute, queryParameters);
+    final res = await http.get(uri);
+    if (res.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
+
+      return _processRecipe(jsonResponse, false);
+    } else {
+      print('Request failed with status: ${res.statusCode}.');
+      return null;
+    }
+  }
+
+  // util
+  static List<Recipe> _processRecipe(List recipeObjsRaw, bool amountIsInt) {
+    List<Recipe> recipeObjsProcessed = [];
+    for (var recipe in recipeObjsRaw) {
+      // used ingredients
+      List<Ingredient> usedIngredients = [];
+      for (var ingredient in recipe["usedIngredients"]) {
+        usedIngredients.add(new Ingredient(
+          id: ingredient["id"],
+          amount:
+          amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
+          unit: ingredient["unit"],
+          aisle: ingredient["aisle"],
+          name: ingredient["name"],
+          image: ingredient["image"],
+          meta: ingredient["meta"].cast<String>(),
+        ));
+      }
+
+      // missed ingredients
+      List<Ingredient> missedIngredients = [];
+      for (var ingredient in recipe["missedIngredients"]) {
+        missedIngredients.add(new Ingredient(
+          id: ingredient["id"],
+          amount:
+          amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
+          unit: ingredient["unit"],
+          aisle: ingredient["aisle"],
+          name: ingredient["name"],
+          image: ingredient["image"],
+          meta: ingredient["meta"].cast<String>(),
+        ));
+      }
+
+      recipeObjsProcessed.add(new Recipe(
+        id: recipe["id"],
+        title: recipe["title"],
+        image: recipe["image"],
+        imageType: recipe["imageType"],
+        healthScore: recipe["healthScore"],
+        pricePerServing: recipe["pricePerServing"],
+        vegetarian: recipe["vegetarian"],
+        vegan: recipe["vegan"],
+        veryHealthy: recipe["veryHealthy"],
+        veryPopular: recipe["veryPopular"],
+        glutenFree: recipe["glutenFree"],
+        dairyFree: recipe["dairyFree"],
+        cheap: recipe["cheap"],
+        sustainable: recipe["sustainable"],
+        usedIngredients: usedIngredients,
+        usedIngredientCount: usedIngredients.length,
+        missedIngredients: missedIngredients,
+        missedIngredientCount: missedIngredients.length,
       ));
     }
 
-    // missed ingredients
-    List<Ingredient> missedIngredients = [];
-    for (var ingredient in recipe["missedIngredients"]) {
-      missedIngredients.add(new Ingredient(
-        id: ingredient["id"],
-        amount:
-            amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
-        unit: ingredient["unit"],
-        aisle: ingredient["aisle"],
-        name: ingredient["name"],
-        image: ingredient["image"],
-        meta: ingredient["meta"].cast<String>(),
-      ));
+    return recipeObjsProcessed;
+  }
+}
+
+class InternalAPI {
+  static Future<String> getRecipeCO2Score(Recipe recipe) async {
+    var ingredients = [...recipe.missedIngredients, ...recipe.usedIngredients];
+
+    final uri = Uri.http(internalApiBase, recipeCO2Route);
+    final res = await http.post(uri, body: {
+      "ingredients": convert.jsonEncode(ingredients)
+    });
+    if (res.statusCode == 200) {
+      //var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
+      return res.body; //jsonResponse["results"];
+    } else {
+      print('Request failed with status: ${res.statusCode}.');
+      return null;
     }
-
-    recipeObjsProcessed.add(new Recipe(
-      id: recipe["id"],
-      title: recipe["title"],
-      image: recipe["image"],
-      imageType: recipe["imageType"],
-      healthScore: recipe["healthScore"],
-      pricePerServing: recipe["pricePerServing"],
-      vegetarian: recipe["vegetarian"],
-      vegan: recipe["vegan"],
-      veryHealthy: recipe["veryHealthy"],
-      veryPopular: recipe["veryPopular"],
-      glutenFree: recipe["glutenFree"],
-      dairyFree: recipe["dairyFree"],
-      cheap: recipe["cheap"],
-      sustainable: recipe["sustainable"],
-      usedIngredients: usedIngredients,
-      usedIngredientCount: usedIngredients.length,
-      missedIngredients: missedIngredients,
-      missedIngredientCount: missedIngredients.length,
-    ));
-  }
-
-  return recipeObjsProcessed;
-}
-
-// external requests
-Future<List<Recipe>> getSelectedRecipes(
-    String q, List<Ingredient> existingIngredients) async {
-  var includeIngredients =
-      existingIngredients.map((ingredient) => ingredient.name).join(",");
-
-  final queryParameters = {
-    "apiKey": apiKey,
-    "fillIngredients": "true",
-    "sort": "max-used-ingredients",
-    "includeIngredients": includeIngredients,
-    "instructionsRequired": "true",
-    "addRecipeNutrition": "true",
-    "addRecipeInformation": "true",
-    "number": "10",
-    "query": q
-  };
-  final uri = Uri.https(apiBase, searchRoute, queryParameters);
-  final res = await http.get(uri);
-
-  if (res.statusCode == 200) {
-    var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
-    List recipeObjsRaw = jsonResponse["results"];
-
-    return processRecipe(recipeObjsRaw, false);
-  } else {
-    print('Request failed with status: ${res.statusCode}.');
-  }
-}
-
-Future<List<Recipe>> getCookableRecipes(
-    List<Ingredient> existingIngredients) async {
-  var includeIngredients =
-      existingIngredients.map((ingredient) => ingredient.name).join(",");
-
-  final queryParameters = {
-    "apiKey": apiKey,
-    "ingredients": includeIngredients,
-    "number": "10",
-    "instructionsRequired": "true",
-    "addRecipeNutrition": "true",
-    "addRecipeInformation": "true",
-    "ranking": "1"
-  };
-
-  final uri = Uri.https(apiBase, findByIngredientsRoute, queryParameters);
-  final res = await http.get(uri);
-  if (res.statusCode == 200) {
-    var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
-
-    return processRecipe(jsonResponse, false);
-  } else {
-    print('Request failed with status: ${res.statusCode}.');
-    return null;
-  }
-}
-
-// internal reqs
-Future<String> getRecipeCO2Score(Recipe recipe) async {
-  var ingredients = [...recipe.missedIngredients, ...recipe.usedIngredients];
-
-  final uri = Uri.http(internalApiBase, recipeCO2Route);
-  final res = await http.post(uri, body: {
-    "ingredients": convert.jsonEncode(ingredients)
-  });
-  if (res.statusCode == 200) {
-    //var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
-    return res.body; //jsonResponse["results"];
-  } else {
-    print('Request failed with status: ${res.statusCode}.');
   }
 }

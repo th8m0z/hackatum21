@@ -28,4 +28,17 @@ class Database {
       },
     );
   }
+
+  static Future<bool> addToShoppingList(String uid, Recipe recipe)  {
+    return _db
+        .collection("users")
+        .doc(uid)
+        .collection("recipes")
+        .add(recipe.toMap())
+        .then((value) => true)
+        .catchError((error) {
+          print("Failed to add to shopping list: $error");
+          return false;
+        });
+  }
 }
