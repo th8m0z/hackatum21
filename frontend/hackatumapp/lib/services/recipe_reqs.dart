@@ -154,7 +154,7 @@ class InternalAPI {
       "user_id": uid
     };
 
-    final uri = Uri.http(internalApiBase, updateShoppingRoute, query)
+    final uri = Uri.http(internalApiBase, updateShoppingRoute, query);
     final res = await http.get(uri);
 
     if (res.statusCode == 200) {
