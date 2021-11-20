@@ -7,8 +7,9 @@ import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/button.dart';
 
 class RecipeTile extends StatelessWidget {
-  RecipeTile({Key key, Recipe this.recipe}) : super(key: key);
+  RecipeTile({Key key, Recipe this.recipe, this.color}) : super(key: key);
   final Recipe recipe;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class RecipeTile extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).primaryColorLight.withOpacity(0.45),
+          color: color ?? Theme.of(context).primaryColorLight.withOpacity(0.2),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,

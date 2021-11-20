@@ -81,7 +81,7 @@ class _HomeState extends State<Home> {
                       hasBoxshadow: true,
                       opacityOnly: true,
                       borderRadius: 100,
-                      color: Theme.of(context).primaryColorLight,
+                      color: Theme.of(context).primaryColor,
                       child: Icon(Icons.add),
                       height: Sc.h * 14,
                       width: Sc.h * 14,
@@ -136,6 +136,9 @@ class _HomeState extends State<Home> {
                   }
                   List<Recipe> cookableRecipes =
                       await ExternalAPI.getCookableRecipes(allIngredients);
+                  List instructions = await ExternalAPI.getInstructionsById(
+                      cookableRecipes[0].id);
+                  print("instructions == $instructions");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -155,7 +158,7 @@ class _HomeState extends State<Home> {
                 width: double.infinity,
                 borderRadius: 2000,
                 hasBoxshadow: true,
-                color: Colors.greenAccent[400],
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ],

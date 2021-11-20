@@ -52,8 +52,8 @@ class _MyAppState extends State<MyApp> {
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
           backgroundColor: Color(0xFFF1FFE7),
-          primaryColorLight: Color(0XFFA9FDAC),
-          primaryColor: Color(0xFF44CF6C),
+          primaryColorLight: Color(0XFF91b496),
+          primaryColor: Color(0xFF2ecc71),
           primaryColorDark: Color(0xFF32A287),
           highlightColor: Color(0xFF6C464E),
           textTheme: TextTheme(
