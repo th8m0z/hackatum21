@@ -4,6 +4,7 @@ import 'package:hackatumapp/screens/recipe_list_screen.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/services/database.dart';
 import 'package:hackatumapp/services/upload_service.dart';
+import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/views/fridge.dart';
 import 'package:hackatumapp/views/recipe_view.dart';
 import 'package:hackatumapp/widgets/button.dart';
@@ -22,6 +23,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    Sc().init(context);
     List<Ingredient> allIngredients = Provider.of<List<Ingredient>>(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,8 +75,8 @@ class _HomeState extends State<Home> {
                       borderRadius: 100,
                       color: Theme.of(context).primaryColorLight,
                       child: Icon(Icons.add),
-                      height: 50,
-                      width: 50,
+                      height: Sc.h * 14,
+                      width: Sc.h * 14,
                       onTap: () async {
                         final ImagePicker _picker = ImagePicker();
                         XFile image = await _picker.pickImage(
@@ -93,7 +95,7 @@ class _HomeState extends State<Home> {
             Align(
               alignment: Alignment(0, -0.55),
               child: Container(
-                height: 380,
+                height: Sc.h * 98,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black.withOpacity(0.035),
@@ -104,7 +106,7 @@ class _HomeState extends State<Home> {
             Align(
               alignment: Alignment(0, 0.6),
               child: Container(
-                height: 180,
+                height: Sc.v * 45,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -132,6 +134,8 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   );
+                  String co2Score = await getRecipeCO2Score(cookableRecipes[0]);
+                  print("co2 score == $co2Score");
                 },
                 child: Text(
                   "GET CURATED RECIPES",
