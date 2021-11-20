@@ -2,22 +2,43 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hackatumapp/screens/home.dart';
+import 'package:hackatumapp/services/data_format.dart';
+import 'package:hackatumapp/services/database.dart';
+import 'package:hackatumapp/utils/sc.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+    return MultiProvider(
+      providers: [
+        StreamProvider<List<Ingredient>>.value(
+            value: Database.ingredientStream("C6OvTqu5Ui4wFOjqmGRw"),
+            initialData: []),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
           // This is the theme of your application.
           //
           // Try running your application with "flutter run". You'll see the
@@ -47,8 +68,24 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
                 color: Colors.white,
-              ))),
-      home: Home(),
+              ),
+              button: GoogleFonts.nunito(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                  color: Colors.black.withOpacity(0.4))),
+        ),
+        home: Home(),
+      ),
     );
+  }
+}
+
+class SizeConfigInit extends StatelessWidget {
+  const SizeConfigInit({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Sc().init(context);
+    return Home();
   }
 }
