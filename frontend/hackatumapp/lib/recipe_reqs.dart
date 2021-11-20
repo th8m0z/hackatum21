@@ -23,7 +23,8 @@ List<Recipe> processRecipe(List recipeObjsRaw, bool amountIsInt) {
     for (var ingredient in recipe["usedIngredients"]) {
       usedIngredients.add(new Ingredient(
         id: ingredient["id"],
-        amount: amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
+        amount:
+            amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
         unit: ingredient["unit"],
         aisle: ingredient["aisle"],
         name: ingredient["name"],
@@ -37,7 +38,8 @@ List<Recipe> processRecipe(List recipeObjsRaw, bool amountIsInt) {
     for (var ingredient in recipe["missedIngredients"]) {
       missedIngredients.add(new Ingredient(
         id: ingredient["id"],
-        amount: amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
+        amount:
+            amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
         unit: ingredient["unit"],
         aisle: ingredient["aisle"],
         name: ingredient["name"],
@@ -72,7 +74,8 @@ List<Recipe> processRecipe(List recipeObjsRaw, bool amountIsInt) {
 }
 
 // external requests
-Future<List> getSelectedRecipes(String q, List<Ingredient> existingIngredients) async {
+Future<List<Recipe>> getSelectedRecipes(
+    String q, List<Ingredient> existingIngredients) async {
   var includeIngredients =
       existingIngredients.map((ingredient) => ingredient.name).join(",");
 
@@ -100,7 +103,8 @@ Future<List> getSelectedRecipes(String q, List<Ingredient> existingIngredients) 
   }
 }
 
-Future<List> getCookableRecipes(List<Ingredient> existingIngredients) async {
+Future<List<Recipe>> getCookableRecipes(
+    List<Ingredient> existingIngredients) async {
   var includeIngredients =
       existingIngredients.map((ingredient) => ingredient.name).join(",");
 
@@ -122,6 +126,7 @@ Future<List> getCookableRecipes(List<Ingredient> existingIngredients) async {
     return processRecipe(jsonResponse, false);
   } else {
     print('Request failed with status: ${res.statusCode}.');
+    return null;
   }
 }
 
@@ -135,8 +140,4 @@ Future<String> getRecipeCO2Score(Recipe recipe) async {
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
-}
-
-void main() async {
-  getCookableRecipes(null);
 }

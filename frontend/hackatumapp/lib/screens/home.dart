@@ -10,6 +10,7 @@ import 'package:hackatumapp/widgets/button.dart';
 import 'package:hackatumapp/widgets/tag.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:hackatumapp/recipe_reqs.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -41,7 +42,7 @@ class _HomeState extends State<Home> {
                       children: [
                         Text(
                           "Hey John!",
-                          style: Theme.of(context).textTheme.headline1,
+                          style: Theme.of(context).textTheme.headline2,
                         ),
                         SizedBox(
                           height: 5,
@@ -121,10 +122,14 @@ class _HomeState extends State<Home> {
                   for (int i = 0; i < allIngredients.length; i++) {
                     print(allIngredients[i].name);
                   }
+                  List<Recipe> cookableRecipes =
+                      await getCookableRecipes(allIngredients);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RecipeListScreen(),
+                      builder: (context) => RecipeListScreen(
+                        recipes: cookableRecipes,
+                      ),
                     ),
                   );
                 },

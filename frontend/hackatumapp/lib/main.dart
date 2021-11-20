@@ -55,6 +55,11 @@ class _MyAppState extends State<MyApp> {
           highlightColor: Color(0xFF6C464E),
           textTheme: TextTheme(
               headline1: GoogleFonts.nunito(
+                fontWeight: FontWeight.w900,
+                fontSize: 36,
+                color: Colors.black,
+              ),
+              headline2: GoogleFonts.nunito(
                 fontWeight: FontWeight.w800,
                 fontSize: 28,
                 color: Colors.black,
