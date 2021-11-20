@@ -132,6 +132,22 @@ class ExternalAPI {
 
     return recipeObjsProcessed;
   }
+
+  static Future<List> getInstructionsById(int recipeId) async {
+    final queryParameters = {
+      "apiKey": apiKey,
+      "stepBreakdown": "false"
+    };
+    final uri = Uri.https(apiBase, "/recipes/${recipeId}/analyzedInstrutions", queryParameters);
+    final res = await http.get(uri);
+    if (res.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
+      List<dynamic> steps = jsonResponse[0]["steps"];
+      for (var step in steps) {
+        print(step);
+      }
+    }
+  }
 }
 
 class InternalAPI {
