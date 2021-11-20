@@ -1,6 +1,6 @@
 class Ingredient {
   final int id;
-  final double amount;
+  final int amount;
   final String unit;
   final String aisle;
   final String name;
@@ -107,4 +107,43 @@ class Recipe {
   //   );
   // }
 
+}
+
+class UserModel {
+  final String name;
+  final bool vegan;
+  final bool vegetarian;
+  final bool sustainable;
+  final bool glutenFree;
+  final String uid;
+
+  UserModel(
+      {this.name,
+      this.vegan,
+      this.vegetarian,
+      this.glutenFree,
+      this.uid,
+      this.sustainable});
+
+  factory UserModel.fromMap(Map<String, dynamic> data) {
+    return UserModel(
+      name: data["name"],
+      vegan: data["vegan"],
+      vegetarian: data["vegetarian"],
+      glutenFree: data["glutenFree"],
+      uid: data["uid"],
+      sustainable: data["sustainable"],
+    );
+  }
+
+  toMap() {
+    return {
+      "name": name,
+      "vegan": vegan,
+      "vegetarian": vegetarian,
+      "glutenFree": glutenFree,
+      "uid": uid,
+      "sustainable": sustainable,
+    };
+  }
 }

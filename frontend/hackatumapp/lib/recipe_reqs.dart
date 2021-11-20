@@ -29,12 +29,10 @@ Future<List> getSelectedRecipes(String q, String includeIngredients) async {
   final res = await http.get(uri);
 
   if (res.statusCode == 200) {
-    var jsonResponse =
-    convert.jsonDecode(res.body) as Map<String, dynamic>;
+    var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
     List recipeObjsRaw = jsonResponse["results"];
 
     return processRecipe(recipeObjsRaw);
-
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
@@ -71,7 +69,6 @@ List<Recipe> processRecipe(List recipeObjsRaw) {
       ));
     }
 
-
     recipeObjsProcessed.add(new Recipe(
       id: recipe["id"],
       title: recipe["title"],
@@ -101,13 +98,11 @@ Future<String> addCO2Score() async {
   final uri = Uri.https(apiBase, searchRoute);
   final res = await http.get(uri);
   if (res.statusCode == 200) {
-    var jsonResponse =
-    convert.jsonDecode(res.body) as Map<String, dynamic>;
+    var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
     return jsonResponse["results"];
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
-
 }
 
 Future<Map> getCookableRecipes() async {
@@ -118,8 +113,7 @@ Future<Map> getCookableRecipes() async {
   final uri = Uri.https(apiBase, searchRoute, queryParameters);
   final res = await http.get(uri);
   if (res.statusCode == 200) {
-    var jsonResponse =
-    convert.jsonDecode(res.body) as Map<String, dynamic>;
+    var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
     print(jsonResponse);
     return jsonResponse;
   } else {

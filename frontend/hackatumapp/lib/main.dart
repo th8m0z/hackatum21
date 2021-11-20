@@ -1,8 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hackatumapp/screens/home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -30,12 +33,21 @@ class MyApp extends StatelessWidget {
           primaryColorDark: Color(0xFF32A287),
           highlightColor: Color(0xFF6C464E),
           textTheme: TextTheme(
-            headline1: GoogleFonts.nunito(
-              fontWeight: FontWeight.w800,
-              fontSize: 28,
-              color: Colors.black,
-            ),
-          )),
+              headline1: GoogleFonts.nunito(
+                fontWeight: FontWeight.w800,
+                fontSize: 28,
+                color: Colors.black,
+              ),
+              caption: GoogleFonts.nunito(
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+                color: Colors.black,
+              ),
+              bodyText1: GoogleFonts.nunito(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: Colors.white,
+              ))),
       home: Home(),
     );
   }
