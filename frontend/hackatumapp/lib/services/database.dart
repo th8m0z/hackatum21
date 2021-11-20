@@ -29,7 +29,7 @@ class Database {
     );
   }
 
-  static Future<bool> addToShoppingList(String uid, Recipe recipe)  {
+  static Future<bool> addToShoppingList(String uid, Recipe recipe) {
     return _db
         .collection("users")
         .doc(uid)
@@ -37,8 +37,30 @@ class Database {
         .add(recipe.toMap())
         .then((value) => true)
         .catchError((error) {
-          print("Failed to add to shopping list: $error");
-          return false;
-        });
+      print("Failed to add to shopping list: $error");
+      return false;
+    });
+  }
+
+  static Stream<List<Recipe>> cookingList(String uid) {
+    return _db
+        .collection("users")
+        .doc(uid)
+        .collection("recipes")
+        .snapshots()
+        .asBroadcastStream()
+        .map((snap) {
+      if (snap == null) {
+        print("snap is null!");
+        return null;
+      } else {
+        return snap.docs.map(
+          (e) {
+            Map<String, dynamic> data = e.data();
+            return Recipe.fromMap(data);
+          },
+        ).toList();
+      }
+    });
   }
 }

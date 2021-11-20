@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hackatumapp/services/data_format.dart';
+import 'package:hackatumapp/services/database.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/button.dart';
 
@@ -12,6 +13,10 @@ class RecipeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Button(
+      onTap: () async {
+        await Database.addToShoppingList("C6OvTqu5Ui4wFOjqmGRw", recipe);
+      },
+      opacityOnly: true,
       gestureOnly: true,
       hasBoxshadow: true,
       child: Container(

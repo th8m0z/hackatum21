@@ -14,6 +14,8 @@ class RecipeListScreen extends StatefulWidget {
 class _RecipeListScreenState extends State<RecipeListScreen> {
   @override
   Widget build(BuildContext context) {
+    widget.recipes
+        .sort((r1, r2) => r1.missedIngredientCount - r2.missedIngredientCount);
     Sc().init(context);
     List<Widget> tiles = widget.recipes
         .map((recipe) => Container(

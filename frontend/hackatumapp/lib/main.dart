@@ -35,6 +35,9 @@ class _MyAppState extends State<MyApp> {
         StreamProvider<List<Ingredient>>.value(
             value: Database.ingredientStream("C6OvTqu5Ui4wFOjqmGRw"),
             initialData: []),
+        StreamProvider<List<Recipe>>.value(
+            value: Database.cookingList("C6OvTqu5Ui4wFOjqmGRw"),
+            initialData: []),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

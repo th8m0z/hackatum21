@@ -11,7 +11,7 @@ import 'package:hackatumapp/widgets/button.dart';
 import 'package:hackatumapp/widgets/tag.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:hackatumapp/recipe_reqs.dart';
+import 'package:hackatumapp/services/recipe_reqs.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -24,7 +24,15 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Sc().init(context);
+
     List<Ingredient> allIngredients = Provider.of<List<Ingredient>>(context);
+    List<Recipe> cookingList = Provider.of<List<Recipe>>(context);
+
+    List<RecipeView> recipeViews = cookingList.map((item) {
+      return RecipeView(
+        recipe: item,
+      );
+    }).toList();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -112,7 +120,9 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black.withOpacity(0.035),
                 ),
-                child: RecipeView(),
+                child: PageView(
+                  children: recipeViews,
+                ),
               ),
             ),
             Align(
@@ -125,7 +135,7 @@ class _HomeState extends State<Home> {
                     print(allIngredients[i].name);
                   }
                   List<Recipe> cookableRecipes =
-                      await getCookableRecipes(allIngredients);
+                      await ExternalAPI.getCookableRecipes(allIngredients);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -134,8 +144,8 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   );
-                  String co2Score = await getRecipeCO2Score(cookableRecipes[0]);
-                  print("co2 score == $co2Score");
+                  // String co2Score = await getRecipeCO2Score(cookableRecipes[0]);
+                  // print("co2 score == $co2Score");
                 },
                 child: Text(
                   "GET CURATED RECIPES",
