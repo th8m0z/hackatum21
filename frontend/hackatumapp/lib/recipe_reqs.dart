@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:convert' as convert;
 
 import 'package:hackatumapp/services/data_format.dart';
@@ -13,33 +12,7 @@ const searchRoute = "/recipes/complexSearch";
 const internalApiBase = "";
 const addCO2Route = "";
 
-Future<List> getSelectedRecipes(String q, String includeIngredients) async {
-  final queryParameters = {
-    "apiKey": apiKey,
-    "fillIngredients": "true",
-    "sort": "max-used-ingredients",
-    "includeIngredients": includeIngredients,
-    "instructionsRequired": "true",
-    "addRecipeNutrition": "true",
-    "addRecipeInformation": "true",
-    "number": "10",
-    "query": q
-  };
-  final uri = Uri.https(apiBase, searchRoute, queryParameters);
-  final res = await http.get(uri);
-
-  if (res.statusCode == 200) {
-    var jsonResponse =
-    convert.jsonDecode(res.body) as Map<String, dynamic>;
-    List recipeObjsRaw = jsonResponse["results"];
-
-    return processRecipe(recipeObjsRaw);
-
-  } else {
-    print('Request failed with status: ${res.statusCode}.');
-  }
-}
-
+// util
 List<Recipe> processRecipe(List recipeObjsRaw) {
   List<Recipe> recipeObjsProcessed = [];
   for (var recipe in recipeObjsRaw) {
@@ -97,6 +70,55 @@ List<Recipe> processRecipe(List recipeObjsRaw) {
   return recipeObjsProcessed;
 }
 
+// external requests
+Future<List> getSelectedRecipes(String q, List<Ingredient> ingredients) async {
+  var includeIngredients = ingredients.map((ingredient) => ingredient.name).join(",");
+
+  final queryParameters = {
+    "apiKey": apiKey,
+    "fillIngredients": "true",
+    "sort": "max-used-ingredients",
+    "includeIngredients": includeIngredients,
+    "instructionsRequired": "true",
+    "addRecipeNutrition": "true",
+    "addRecipeInformation": "true",
+    "number": "10",
+    "query": q
+  };
+  final uri = Uri.https(apiBase, searchRoute, queryParameters);
+  final res = await http.get(uri);
+
+  if (res.statusCode == 200) {
+    var jsonResponse =
+    convert.jsonDecode(res.body) as Map<String, dynamic>;
+    List recipeObjsRaw = jsonResponse["results"];
+
+    return processRecipe(recipeObjsRaw);
+
+  } else {
+    print('Request failed with status: ${res.statusCode}.');
+  }
+}
+
+Future<List> getCookableRecipes() async {
+  final queryParameters = {
+    "apiKey": apiKey,
+  };
+
+  final uri = Uri.https(apiBase, searchRoute, queryParameters);
+  final res = await http.get(uri);
+  if (res.statusCode == 200) {
+    var jsonResponse =
+    convert.jsonDecode(res.body) as Map<String, dynamic>;
+    List recipeObjsRaw = jsonResponse["results"];
+
+    return processRecipe(recipeObjsRaw);
+  } else {
+    print('Request failed with status: ${res.statusCode}.');
+  }
+}
+
+// internal reqs
 Future<String> addCO2Score() async {
   final uri = Uri.https(apiBase, searchRoute);
   final res = await http.get(uri);
@@ -108,21 +130,4 @@ Future<String> addCO2Score() async {
     print('Request failed with status: ${res.statusCode}.');
   }
 
-}
-
-Future<Map> getCookableRecipes() async {
-  final queryParameters = {
-    "apiKey": apiKey,
-  };
-
-  final uri = Uri.https(apiBase, searchRoute, queryParameters);
-  final res = await http.get(uri);
-  if (res.statusCode == 200) {
-    var jsonResponse =
-    convert.jsonDecode(res.body) as Map<String, dynamic>;
-    print(jsonResponse);
-    return jsonResponse;
-  } else {
-    print('Request failed with status: ${res.statusCode}.');
-  }
 }
