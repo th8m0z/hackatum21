@@ -66,6 +66,7 @@ class ExternalAPI {
     final res = await http.get(uri);
     if (res.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
+      print(res.body);
 
       return _processRecipe(jsonResponse["results"], false);
     } else {
