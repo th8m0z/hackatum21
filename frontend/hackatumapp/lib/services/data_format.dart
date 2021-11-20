@@ -176,6 +176,16 @@ class Recipe {
   }
 }
 
+class InstructionStep {
+  final int number;
+  final String text;
+
+  InstructionStep({
+    this.number,
+    this.text
+  });
+}
+
 class UserModel {
   final String name;
   final bool vegan;

@@ -138,14 +138,22 @@ class ExternalAPI {
       "apiKey": apiKey,
       "stepBreakdown": "false"
     };
-    final uri = Uri.https(apiBase, "/recipes/${recipeId}/analyzedInstrutions", queryParameters);
+    final uri = Uri.https(apiBase, "/recipes/${recipeId}/analyzedInstructions", queryParameters);
     final res = await http.get(uri);
     if (res.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
       List<dynamic> steps = jsonResponse[0]["steps"];
+
+      List<InstructionStep> serializedSteps = [];
       for (var step in steps) {
-        print(step);
+        InstructionStep serializedInstruction = new InstructionStep(
+            number: step["number"],
+            text: step["step"]);
+        serializedSteps.add(serializedInstruction);
       }
+
+
+      return serializedSteps;
     }
   }
 }
