@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'dart:io';
 
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:http/http.dart' as http;
@@ -7,13 +8,14 @@ import 'package:http/http.dart' as http;
 const apiBase = "api.spoonacular.com";
 const apiKey = "d5c3362156be441f8ce223ad224857db";
 const searchRoute = "/recipes/complexSearch";
+const findByIngredientsRoute = "/recipes/findByIngredients";
 
 // intl firebase functions
-const internalApiBase = "";
-const addCO2Route = "";
+const internalApiBase = "192.168.178.24:5000";
+const recipeCO2Route = "/recipe_co2_score";
 
 // util
-List<Recipe> processRecipe(List recipeObjsRaw) {
+List<Recipe> processRecipe(List recipeObjsRaw, bool amountIsInt) {
   List<Recipe> recipeObjsProcessed = [];
   for (var recipe in recipeObjsRaw) {
     // used ingredients
@@ -21,7 +23,7 @@ List<Recipe> processRecipe(List recipeObjsRaw) {
     for (var ingredient in recipe["usedIngredients"]) {
       usedIngredients.add(new Ingredient(
         id: ingredient["id"],
-        amount: ingredient["amount"],
+        amount: amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
         unit: ingredient["unit"],
         aisle: ingredient["aisle"],
         name: ingredient["name"],
@@ -35,7 +37,7 @@ List<Recipe> processRecipe(List recipeObjsRaw) {
     for (var ingredient in recipe["missedIngredients"]) {
       missedIngredients.add(new Ingredient(
         id: ingredient["id"],
-        amount: ingredient["amount"],
+        amount: amountIsInt ? ingredient["amount"] : ingredient["amount"].round(),
         unit: ingredient["unit"],
         aisle: ingredient["aisle"],
         name: ingredient["name"],
@@ -70,9 +72,9 @@ List<Recipe> processRecipe(List recipeObjsRaw) {
 }
 
 // external requests
-Future<List> getSelectedRecipes(String q, List<Ingredient> ingredients) async {
+Future<List> getSelectedRecipes(String q, List<Ingredient> existingIngredients) async {
   var includeIngredients =
-      ingredients.map((ingredient) => ingredient.name).join(",");
+      existingIngredients.map((ingredient) => ingredient.name).join(",");
 
   final queryParameters = {
     "apiKey": apiKey,
@@ -92,31 +94,41 @@ Future<List> getSelectedRecipes(String q, List<Ingredient> ingredients) async {
     var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
     List recipeObjsRaw = jsonResponse["results"];
 
-    return processRecipe(recipeObjsRaw);
+    return processRecipe(recipeObjsRaw, true);
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
 }
 
-Future<List> getCookableRecipes() async {
+Future<List> getCookableRecipes(List<Ingredient> existingIngredients) async {
+  var includeIngredients = "bananas";
+  //    existingIngredients.map((ingredient) => ingredient.name).join(",");
+
   final queryParameters = {
     "apiKey": apiKey,
+    "ingredients": includeIngredients,
+    "number": "10",
+    "instructionsRequired": "true",
+    "addRecipeNutrition": "true",
+    "addRecipeInformation": "true",
+    "ranking": "1"
   };
 
-  final uri = Uri.https(apiBase, searchRoute, queryParameters);
+  final uri = Uri.https(apiBase, findByIngredientsRoute, queryParameters);
   final res = await http.get(uri);
   if (res.statusCode == 200) {
-    var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
-    List recipeObjsRaw = jsonResponse["results"];
+    var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
+    print(res.body);
+    // List recipeObjsRaw = jsonResponse["results"];
 
-    return processRecipe(recipeObjsRaw);
+    return processRecipe(jsonResponse, false);
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
 }
 
 // internal reqs
-Future<String> addCO2Score() async {
+Future<String> getRecipeCO2Score(Recipe recipe) async {
   final uri = Uri.https(apiBase, searchRoute);
   final res = await http.get(uri);
   if (res.statusCode == 200) {
@@ -125,4 +137,8 @@ Future<String> addCO2Score() async {
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
+}
+
+void main() async {
+  getCookableRecipes(null);
 }
