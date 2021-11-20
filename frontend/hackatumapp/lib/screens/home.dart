@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hackatumapp/services/ml_vision_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hackatumapp/views/fridge.dart';
 import 'package:hackatumapp/widgets/button.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,8 +28,6 @@ class _HomeState extends State<Home> {
                   final ImagePicker _picker = ImagePicker();
                   XFile image =
                       await _picker.pickImage(source: ImageSource.gallery);
-                  String receiptText =
-                      await VisionService.processImage(image.path);
                   print("receiptText");
                 },
                 child: Icon(
@@ -44,9 +42,9 @@ class _HomeState extends State<Home> {
               ),
             ),
             Align(
-              alignment: Alignment(0, -0.9),
+              alignment: Alignment(0, -0.65),
               child: Container(
-                height: 450,
+                height: 400,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black.withOpacity(0.035),
@@ -60,10 +58,34 @@ class _HomeState extends State<Home> {
                 height: 180,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withOpacity(0.035),
+                  color: Theme.of(context).backgroundColor,
+                  // Colors.black.withOpacity(0.035),
                 ),
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment(0, -0.975),
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Hey John!",
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                    Button(
+                      hasBoxshadow: true,
+                      opacityOnly: true,
+                      borderRadius: 100,
+                      color: Theme.of(context).primaryColorLight,
+                      child: Icon(Icons.add),
+                      height: 50,
+                      width: 50,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

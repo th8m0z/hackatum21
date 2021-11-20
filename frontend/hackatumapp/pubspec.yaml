@@ -37,7 +37,6 @@ dependencies:
   simple_animations: ^2.5.1
   google_fonts: ^2.1.0
   image_picker: ^0.8.4+4
-  google_ml_vision: ^0.0.7
   dio: ^4.0.3
   http: ^0.13.4
 
