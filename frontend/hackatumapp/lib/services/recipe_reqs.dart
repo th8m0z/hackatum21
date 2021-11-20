@@ -141,10 +141,15 @@ class ExternalAPI {
     if (res.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
       List<dynamic> steps = jsonResponse[0]["steps"];
-      print("body == ${res.body}");
+
+      List<InstructionStep> serializedSteps = [];
       for (var step in steps) {
-        print(step);
+        InstructionStep serializedInstruction =
+            new InstructionStep(number: step["number"], text: step["step"]);
+        serializedSteps.add(serializedInstruction);
       }
+
+      return serializedSteps;
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:color_thief_flutter/color_thief_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hackatumapp/screens/recipe_list_screen.dart';
@@ -36,68 +37,73 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        padding: EdgeInsets.only(left: 22, right: 22, top: 40),
+        padding:
+            EdgeInsets.only(left: Sc.h * 5, right: Sc.h * 5, top: Sc.v * 15),
         // color: Colors.red,
-        child: Stack(
+        child: Column(
           children: [
-            Align(
-              alignment: Alignment(0, -0.975),
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Hey John!",
-                          style: Theme.of(context).textTheme.headline2,
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Hey John!",
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                      SizedBox(
+                        height: Sc.v * 3,
+                      ),
+                      Container(
+                        width: Sc.h * 65,
+                        child: Wrap(
+                          spacing: Sc.h * 2,
+                          runSpacing: Sc.v * 1.5,
+                          children: [
+                            Tag(
+                              textColor: Colors.green[900],
+                              color: Theme.of(context).primaryColor,
+                              text: "Vegan",
+                            ),
+                            Tag(
+                                textColor: Colors.orange[700],
+                                color: Color(0xFFfcd670),
+                                text: "Gluten-Free"),
+                            Tag(
+                              text: "Sustainable",
+                              textColor: Colors.brown[900],
+                              color: Theme.of(context)
+                                  .highlightColor
+                                  .withOpacity(0.8),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          width: 190,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Tag(
-                                color: Theme.of(context).primaryColor,
-                                text: "Vegan",
-                              ),
-                              Tag(
-                                  text: "Protein",
-                                  color: Theme.of(context).highlightColor),
-                              Tag(
-                                text: "Sustainable",
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    Button(
-                      hasBoxshadow: true,
-                      opacityOnly: true,
-                      borderRadius: 100,
-                      color: Theme.of(context).primaryColor,
-                      child: Icon(Icons.add),
-                      height: Sc.h * 14,
-                      width: Sc.h * 14,
-                      onTap: () async {
-                        final ImagePicker _picker = ImagePicker();
-                        XFile image = await _picker.pickImage(
-                            source: ImageSource.gallery);
-                        String uid = "C6OvTqu5Ui4wFOjqmGRw";
-                        await DioUploadService.uploadPhotos(
-                          image.path,
-                          uid,
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                      )
+                    ],
+                  ),
+                  Button(
+                    hasBoxshadow: true,
+                    opacityOnly: true,
+                    borderRadius: 100,
+                    color: Theme.of(context).primaryColor,
+                    child: Icon(Icons.add),
+                    height: Sc.h * 14,
+                    width: Sc.h * 14,
+                    onTap: () async {
+                      final ImagePicker _picker = ImagePicker();
+                      XFile image =
+                          await _picker.pickImage(source: ImageSource.gallery);
+                      String uid = "C6OvTqu5Ui4wFOjqmGRw";
+                      await DioUploadService.uploadPhotos(
+                        image.path,
+                        uid,
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
             Align(
@@ -138,6 +144,17 @@ class _HomeState extends State<Home> {
                       await ExternalAPI.getCookableRecipes(allIngredients);
                   List instructions = await ExternalAPI.getInstructionsById(
                       cookableRecipes[0].id);
+
+                  // List<Color> colors = [];
+                  // for (int i = 0; i < cookableRecipes.length; i++) {
+                  //   List<int> rgbColors =
+                  //       await getColorFromUrl(cookableRecipes[i].image);
+                  //   print("rgbColor == ${rgbColors.runtimeType}");
+                  //   colors.add(
+                  //     Color.fromARGB(
+                  //         255, rgbColors[0], rgbColors[1], rgbColors[2]),
+                  //   );
+                  // }
                   print("instructions == $instructions");
                   Navigator.push(
                     context,

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:color_thief_flutter/color_thief_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hackatumapp/services/data_format.dart';
@@ -21,34 +22,47 @@ class RecipeTile extends StatelessWidget {
       gestureOnly: true,
       hasBoxshadow: true,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: Sc.h * 2),
-        margin: EdgeInsets.only(bottom: Sc.v * 4),
-        height: Sc.h * 35,
+        // padding: EdgeInsets.symmetric(left: Sc.h * 2),
+        margin:
+            EdgeInsets.only(bottom: Sc.v * 5, left: Sc.h * 2, right: Sc.h * 3),
+        height: Sc.h * 40,
         width: double.infinity,
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              blurRadius: Sc.h * 2.5,
+              spreadRadius: Sc.h * 0.1,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
           borderRadius: BorderRadius.circular(10),
-          color: color ?? Theme.of(context).primaryColorLight.withOpacity(0.2),
+          color: color,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(
-              padding: EdgeInsets.all(Sc.h * 1.75),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Theme.of(context).primaryColor.withOpacity(0.5),
-                //     blurRadius: 12.0,
-                //     spreadRadius: 0,
-                //   )
-                // ],
-                color: Theme.of(context).primaryColor.withOpacity(0.4),
+            Flexible(
+              child: Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: Sc.h * 6, horizontal: Sc.h * 5),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: Sc.h * 2,
+                        blurRadius: Sc.h * 5,
+                        color: Theme.of(context).primaryColor.withOpacity(0.1)),
+                  ],
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      recipe != null
+                          ? recipe.image
+                          : "https://cdn.pixabay.com/photo/2015/04/08/13/13/food-712665_960_720.jpg",
+                    ),
+                  ),
+                ),
               ),
-              child: Icon(Icons.add, color: Colors.green[900]),
-            ),
-            SizedBox(
-              width: Sc.h * 3,
             ),
             Container(
               width: Sc.h * 43,
@@ -73,23 +87,25 @@ class RecipeTile extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(
+              width: Sc.h * 3,
+            ),
             Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: Sc.h * 4, horizontal: Sc.h * 3),
-              height: Sc.h * 26,
-              width: Sc.h * 26,
+              width: Sc.h * 12,
+              height: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    recipe != null
-                        ? recipe.image
-                        : "https://cdn.pixabay.com/photo/2015/04/08/13/13/food-712665_960_720.jpg",
-                  ),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
                 ),
+                color: Theme.of(context).primaryColor.withOpacity(0.8),
               ),
-            )
+              child: Icon(
+                Icons.add,
+                color: Colors.green[900],
+                size: Sc.h * 9,
+              ),
+            ),
           ],
         ),
       ),

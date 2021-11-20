@@ -11,6 +11,20 @@ class FridgeView extends StatefulWidget {
 class _FridgeViewState extends State<FridgeView> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(color: Colors.lightBlue[200]),
+              Container(),
+            ],
+          ),
+          Row(
+            children: [Container(), Container()],
+          ),
+        ],
+      ),
+    );
   }
 }
