@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 from werkzeug.utils import secure_filename
 import os
+import re
 
 import firebase_admin
 from firebase_admin import credentials
@@ -50,8 +51,39 @@ def upload_receipt():
 
 example_product = ("Paprika Mix REWE", 1.69)
 
+
+# json array {ingredients: []}
+category_co2_scores = {
+    "Meat": 5,
+    "Cheese": 3,
+    "Milk, Eggs, Other Dairy": 1.5,
+    "Sweet Snacks": 2,
+    "Pasta and Rice": 0.6
+}
+
+"""
+    accepts {ingredients: [{aisle: string, ...}]} body
+    returns {score: 1-10} or {score: null} if no sufficient information
+"""
+@app.route('/recipe_co2_score', methods=['POST'])
+def get_co2_score():
+    ingredients = request.get_json(force=True)["ingredients"]
+    score = 10
+    ingredients_rated = 0
+
+    for ingredient in ingredients:
+        if "aisle" in ingredient:
+            ingredients_rated += 1
+            if ingredient["aisle"] in category_co2_scores:
+                score = score - category_co2_scores[ingredient["aisle"]]
+
+    if ingredients_rated > len(ingredients)/5:
+        return jsonify({"score": max(score, 0)})
+    else:
+        return jsonify({"score": None})
+
 '''
-    :returns array of products 
+    :returns array of {product, amount} 
     example /process_receipt?user_id=9138h4n8jms
 '''
 def process_receipt(filepath):
@@ -65,8 +97,13 @@ def process_receipt(filepath):
 
     i = 0
     for line in lines:
-        if i == 1:
-            break
+        # if i == 1:
+        #     break
+
+        try:
+            weight = re.findall("(\d+)g",  line)[0]
+        except IndexError:
+            weight = None
         line_elements = line.split(' ')
         line_len = len(line_elements)
         if line_len > 2:
@@ -76,12 +113,15 @@ def process_receipt(filepath):
                 if char in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                     name = name[0:index]
 
-            price = line_elements[-2]
-            products.append(name)
-
-        i += 1
-        if i >= 3:
-            break
+            product = {"name": name}
+            if weight is not None:
+                product["amount"] = weight
+                product["units"] = "g"
+            products.append(product)
+        #
+        # i += 1
+        # if i >= 3:
+        #     break
     return products
 
 
