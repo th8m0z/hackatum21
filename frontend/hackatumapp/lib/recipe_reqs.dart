@@ -101,8 +101,8 @@ Future<List> getSelectedRecipes(String q, List<Ingredient> existingIngredients) 
 }
 
 Future<List> getCookableRecipes(List<Ingredient> existingIngredients) async {
-  var includeIngredients = "bananas";
-  //    existingIngredients.map((ingredient) => ingredient.name).join(",");
+  var includeIngredients =
+      existingIngredients.map((ingredient) => ingredient.name).join(",");
 
   final queryParameters = {
     "apiKey": apiKey,
@@ -118,8 +118,6 @@ Future<List> getCookableRecipes(List<Ingredient> existingIngredients) async {
   final res = await http.get(uri);
   if (res.statusCode == 200) {
     var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
-    print(res.body);
-    // List recipeObjsRaw = jsonResponse["results"];
 
     return processRecipe(jsonResponse, false);
   } else {
