@@ -13,7 +13,7 @@ const findByIngredientsRoute = "/recipes/findByIngredients";
 // intl firebase functions
 const internalApiBase = "192.168.178.24:5000";
 const recipeCO2Route = "/recipe_co2_score";
-const updateShoppingList = "/update_shopping_list";
+const updateShoppingRoute = "/update_shopping_list";
 
 class ExternalAPI {
   static Future<List<Recipe>> getSelectedRecipes(
@@ -62,7 +62,7 @@ class ExternalAPI {
       "query": ""
     };
 
-    final uri = Uri.https(apiBase, findByIngredientsRoute, queryParameters);
+    final uri = Uri.https(apiBase, searchRoute, queryParameters);
     final res = await http.get(uri);
     if (res.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
@@ -146,6 +146,22 @@ class InternalAPI {
     } else {
       print('Request failed with status: ${res.statusCode}.');
       return null;
+    }
+  }
+
+  static Future<bool> updateShoppingList(String uid) async {
+    var query = {
+      "user_id": uid
+    };
+
+    final uri = Uri.http(internalApiBase, updateShoppingRoute, query)
+    final res = await http.get(uri);
+
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      print('Request failed with status: ${res.statusCode}.');
+      return false;
     }
   }
 }
