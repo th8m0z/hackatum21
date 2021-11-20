@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 from werkzeug.utils import secure_filename
 import os
+from collections import  defaultdict
 import re
 
 import firebase_admin
@@ -51,6 +52,53 @@ def upload_receipt():
 
 example_product = ("Paprika Mix REWE", 1.69)
 
+@app.route('/update_shopping_list', methods=['POST'])
+def update_shopping_list():
+    user_id = request.args.get('user_id')
+    recipes = db.collection(u'users').document(u'C6OvTqu5Ui4wFOjqmGRw').collection(u'recipes').stream()
+    ingredients = db.collection(u'users').document(u'C6OvTqu5Ui4wFOjqmGRw').collection(u'ingredients').stream()
+    shopping_list = db.collection(u'users').document(u'C6OvTqu5Ui4wFOjqmGRw').collection(u'shopping_list').stream()
+
+    all_recipe_ingredients = defaultdict(int)
+    info_for_id = {}
+    for recipe in recipes:
+        recipe_dict = recipe.to_dict()
+        recipe_ingredients = recipe_dict.get('usedIngredients', [])
+        for ingredient in recipe_ingredients:
+            ingredient_id = ingredient.get('id', 0)
+            ingredient_name = ingredient.get('name', '')
+            ingredient_pic = ingredient.get('image', '')
+            all_recipe_ingredients[ingredient_id] += 1
+            info_for_id[ingredient_id] = (ingredient_name, ingredient_pic)
+
+    for ingredient in ingredients:
+        ingredient_dict = ingredient.to_dict()
+        ingredient_id = ingredient_dict.get('id', -1)
+        ingredient_amount = ingredient_dict.get('amount', 0)
+        all_recipe_ingredients[ingredient_id] -= ingredient_amount
+
+    update_dict = {k:v for k, v in all_recipe_ingredients.items() if v >= 0}
+
+    ids_to_delete = []
+    for element in shopping_list:
+        id = element.to_dict().get('id', -1)
+        if id not in update_dict.keys():
+            ids_to_delete.append(element.id)
+    
+    upload_data = []
+    for k, v in update_dict.items():
+        upload_data.append({
+            "amount":v,
+            "id": k,
+            "name": info_for_id[k][0],
+            "image": info_for_id[k][1]
+        })
+    
+    for element in ids_to_delete:
+        db.collection(u'users').document(u'C6OvTqu5Ui4wFOjqmGRw').collection(u'shopping_list').document(element).delete()
+    
+    for element in upload_data:
+        db.collection(u'users').document(u'C6OvTqu5Ui4wFOjqmGRw').collection(u'shopping_list').add(element)
 
 # json array {ingredients: []}
 category_co2_scores = {
