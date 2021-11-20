@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackatumapp/services/data_format.dart';
 
@@ -63,4 +65,5 @@ class Database {
       }
     });
   }
+
 }
