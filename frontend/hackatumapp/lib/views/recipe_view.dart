@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hackatumapp/screens/cooking_screen.dart';
 import 'package:hackatumapp/services/data_format.dart';
+import 'package:hackatumapp/services/recipe_reqs.dart';
+import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/button.dart';
 
 class RecipeView extends StatelessWidget {
@@ -10,13 +12,19 @@ class RecipeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Button(
+      opacityOnly: true,
       gestureOnly: true,
-      onTap: () {
+      onTap: () async {
+        List<InstructionStep> instructions =
+            await ExternalAPI.getInstructionsById(recipe.id);
+
+        print("instructions == $instructions");
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => CookingScreen(
               recipe: recipe,
+              instructions: instructions,
             ),
           ),
         );
@@ -25,6 +33,15 @@ class RecipeView extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Stack(
           children: [
+            Positioned(
+              top: -Sc.h * 80,
+              child: Image.asset(
+                "assets/random_pattern.png",
+                color: Colors.black.withOpacity(0.05),
+                height: Sc.h * 250,
+                fit: BoxFit.fill,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,

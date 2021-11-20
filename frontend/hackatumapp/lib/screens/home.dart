@@ -1,9 +1,8 @@
-import 'package:color_thief_flutter/color_thief_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 import 'package:hackatumapp/screens/recipe_list_screen.dart';
 import 'package:hackatumapp/services/data_format.dart';
-import 'package:hackatumapp/services/database.dart';
+
 import 'package:hackatumapp/services/upload_service.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/views/fridge.dart';
@@ -29,11 +28,13 @@ class _HomeState extends State<Home> {
     List<Ingredient> allIngredients = Provider.of<List<Ingredient>>(context);
     List<Recipe> cookingList = Provider.of<List<Recipe>>(context);
 
-    List<RecipeView> recipeViews = cookingList.map((item) {
-      return RecipeView(
-        recipe: item,
-      );
-    }).toList();
+    List<RecipeView> recipeViews = cookingList.map(
+      (item) {
+        return RecipeView(
+          recipe: item,
+        );
+      },
+    ).toList();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -93,29 +94,33 @@ class _HomeState extends State<Home> {
                     height: Sc.h * 14,
                     width: Sc.h * 14,
                     onTap: () async {
-                      final ImagePicker _picker = ImagePicker();
-                      XFile image =
-                          await _picker.pickImage(source: ImageSource.gallery);
-                      String uid = "C6OvTqu5Ui4wFOjqmGRw";
-                      await DioUploadService.uploadPhotos(
-                        image.path,
-                        uid,
-                      );
+                      try {
+                        final ImagePicker _picker = ImagePicker();
+                        XFile image = await _picker.pickImage(
+                            source: ImageSource.gallery);
+                        String uid = "C6OvTqu5Ui4wFOjqmGRw";
+                        if (image != null) {
+                          await DioUploadService.uploadPhotos(
+                            image.path,
+                            uid,
+                          );
+                        }
+                      } on PlatformException catch (e) {
+                        print("error while picking file");
+                      }
                     },
                   ),
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment(0, -0.55),
-              child: Container(
-                height: Sc.h * 98,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withOpacity(0.035),
-                ),
-                child: FridgeView(),
+            SizedBox(height: Sc.v * 6),
+            Container(
+              height: Sc.h * 98,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                // color: Colors.black.withOpacity(0.035),
               ),
+              child: FridgeView(),
             ),
             Align(
               alignment: Alignment(0, 0.6),
@@ -123,14 +128,22 @@ class _HomeState extends State<Home> {
                 height: Sc.v * 45,
                 width: double.infinity,
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: Sc.h * 2.5,
+                      spreadRadius: Sc.h * 0.1,
+                      color: Colors.black.withOpacity(0.1),
+                    )
+                  ],
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withOpacity(0.035),
+                  color: Colors.white,
                 ),
                 child: PageView(
                   children: recipeViews,
                 ),
               ),
             ),
+            SizedBox(height: Sc.v * 8),
             Align(
               alignment: Alignment(0, 0.92),
               child: Button(
@@ -142,8 +155,11 @@ class _HomeState extends State<Home> {
                   }
                   List<Recipe> cookableRecipes =
                       await ExternalAPI.getCookableRecipes(allIngredients);
-                  List instructions = await ExternalAPI.getInstructionsById(
-                      cookableRecipes[0].id);
+                  // for (int i = 0; i < cookableRecipes.length; i++) {
+                  //   List instructions = await ExternalAPI.getInstructionsById(
+                  //       cookableRecipes[i].id);
+                  //   print("instructions == $instructions");
+                  // }
 
                   // List<Color> colors = [];
                   // for (int i = 0; i < cookableRecipes.length; i++) {
@@ -155,7 +171,7 @@ class _HomeState extends State<Home> {
                   //         255, rgbColors[0], rgbColors[1], rgbColors[2]),
                   //   );
                   // }
-                  print("instructions == $instructions");
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(

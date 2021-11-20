@@ -1,8 +1,6 @@
 import 'dart:convert' as convert;
-
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 // spoonacular
 const apiBase = "api.spoonacular.com";
@@ -133,9 +131,9 @@ class ExternalAPI {
     return recipeObjsProcessed;
   }
 
-  static Future<List> getInstructionsById(int recipeId) async {
+  static Future<List<InstructionStep>> getInstructionsById(int recipeId) async {
     final queryParameters = {"apiKey": apiKey, "stepBreakdown": "false"};
-    final uri = Uri.https(
+    final Uri uri = Uri.https(
         apiBase, "/recipes/${recipeId}/analyzedInstructions", queryParameters);
     final res = await http.get(uri);
     if (res.statusCode == 200) {

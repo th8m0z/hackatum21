@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Color(0xFFF1FFE7),
           primaryColorLight: Color(0XFF91b496),
           primaryColor: Color(0xFF2ecc71),
-          primaryColorDark: Color(0xFF32A287),
+          primaryColorDark: Color(0xFF1e824c),
           highlightColor: Color(0xFF6C464E),
           textTheme: TextTheme(
               headline1: GoogleFonts.nunito(
