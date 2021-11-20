@@ -53,7 +53,6 @@ class Recipe {
   final int missedIngredientCount;
   final List<Ingredient> missedIngredients;
   final List<Ingredient> usedIngredients;
-  final List<Ingredient> unusedIngredients;
   final int id;
   final String title;
   final String imageType;
@@ -71,8 +70,7 @@ class Recipe {
   final String image;
 
   Recipe(
-      {this.unusedIngredients,
-      this.usedIngredientCount,
+      {this.usedIngredientCount,
       this.missedIngredientCount,
       this.usedIngredients,
       this.missedIngredients,
