@@ -46,6 +46,21 @@ class Ingredient {
       "meta": meta,
     };
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "amount": amount,
+      "unit": unit,
+      "aisle": aisle,
+      "name": name,
+      "originalName": originalName,
+      "originalString": originalString,
+      "image": image,
+      "meta": meta,
+    };
+  }
+
 }
 
 class Recipe {

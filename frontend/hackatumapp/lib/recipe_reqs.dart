@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:http/http.dart' as http;
 
@@ -97,7 +98,7 @@ Future<List<Recipe>> getSelectedRecipes(
     var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
     List recipeObjsRaw = jsonResponse["results"];
 
-    return processRecipe(recipeObjsRaw, true);
+    return processRecipe(recipeObjsRaw, false);
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
@@ -132,11 +133,15 @@ Future<List<Recipe>> getCookableRecipes(
 
 // internal reqs
 Future<String> getRecipeCO2Score(Recipe recipe) async {
-  final uri = Uri.https(apiBase, searchRoute);
-  final res = await http.get(uri);
+  var ingredients = [...recipe.missedIngredients, ...recipe.usedIngredients];
+
+  final uri = Uri.http(internalApiBase, recipeCO2Route);
+  final res = await http.post(uri, body: {
+    "ingredients": convert.jsonEncode(ingredients)
+  });
   if (res.statusCode == 200) {
-    var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
-    return jsonResponse["results"];
+    //var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
+    return res.body; //jsonResponse["results"];
   } else {
     print('Request failed with status: ${res.statusCode}.');
   }
