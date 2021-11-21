@@ -138,6 +138,9 @@ class ExternalAPI {
     final res = await http.get(uri);
     if (res.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(res.body) as List<dynamic>;
+      if (jsonResponse.length == 0) {
+        return null;
+      }
       List<dynamic> steps = jsonResponse[0]["steps"];
 
       List<InstructionStep> serializedSteps = [];
