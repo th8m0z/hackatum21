@@ -32,6 +32,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        StreamProvider.value(
+            value: Database.userModel("C6OvTqu5Ui4wFOjqmGRw"),
+            initialData: null),
         StreamProvider<List<Ingredient>>.value(
             value: Database.ingredientStream("C6OvTqu5Ui4wFOjqmGRw"),
             initialData: []),

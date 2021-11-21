@@ -235,12 +235,14 @@ class _HomeState extends State<Home> {
               child: Button(
                 opacityOnly: true,
                 onTap: () async {
+                  UserModel userModel = Provider.of<UserModel>(context);
                   print("allIngredients == $allIngredients");
                   for (int i = 0; i < allIngredients.length; i++) {
                     print(allIngredients[i].name);
                   }
                   List<Recipe> cookableRecipes =
-                      await ExternalAPI.getCookableRecipes(allIngredients);
+                      await ExternalAPI.getCookableRecipes(
+                          allIngredients, userModel);
                   for (int i = 0; i < cookableRecipes.length; i++) {
                     List instructions = await ExternalAPI.getInstructionsById(
                       cookableRecipes[i].id,
