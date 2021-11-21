@@ -170,15 +170,16 @@ class ExternalAPI {
 }
 
 class InternalAPI {
-  static Future<String> getRecipeCO2Score(Recipe recipe) async {
+  static Future<int> getRecipeCO2Score(Recipe recipe) async {
     var ingredients = [...recipe.missedIngredients, ...recipe.usedIngredients];
 
     final uri = Uri.http(internalApiBase, recipeCO2Route);
     final res = await http
         .post(uri, body: {"ingredients": convert.jsonEncode(ingredients)});
     if (res.statusCode == 200) {
-      //var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
-      return res.body; //jsonResponse["results"];
+      var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
+
+      return int.tryParse(jsonResponse["score"]);
     } else {
       print('Request failed with status: ${res.statusCode}.');
       return null;
