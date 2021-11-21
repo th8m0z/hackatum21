@@ -44,7 +44,7 @@ class ExternalAPI {
   }
 
   static Future<List<Recipe>> getCookableRecipes(
-      List<Ingredient> existingIngredients) async {
+      List<Ingredient> existingIngredients, UserModel userModel) async {
     var includeIngredients =
         existingIngredients.map((ingredient) => ingredient.name).join(",");
 
