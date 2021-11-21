@@ -3,6 +3,7 @@ import requests
 from werkzeug.utils import secure_filename
 import os
 import re
+import json
 
 import firebase_admin
 from firebase_admin import credentials
@@ -51,7 +52,6 @@ def upload_receipt():
 
 example_product = ("Paprika Mix REWE", 1.69)
 
-
 # json array {ingredients: []}
 category_co2_scores = {
     "Meat": 5,
@@ -67,7 +67,8 @@ category_co2_scores = {
 """
 @app.route('/recipe_co2_score', methods=['POST'])
 def get_co2_score():
-    ingredients = request.get_json(force=True)["ingredients"]
+    ingredients = json.loads(request.form['ingredients'])
+    print(ingredients)
     score = 10
     ingredients_rated = 0
 
