@@ -17,6 +17,7 @@ class RecipeTile extends StatelessWidget {
     return Button(
       onTap: () async {
         await Database.addToShoppingList("C6OvTqu5Ui4wFOjqmGRw", recipe);
+        Navigator.pop(context);
       },
       opacityOnly: true,
       gestureOnly: true,

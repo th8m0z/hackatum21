@@ -208,7 +208,7 @@ class _HomeState extends State<Home> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           image: DecorationImage(
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                             image: StaticStore.image != null
                                 ? StaticStore.image
                                 : NetworkImage(
