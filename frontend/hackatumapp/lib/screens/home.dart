@@ -62,24 +62,26 @@ class _HomeState extends State<Home> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              List<Recipe> recipes = Provider.of<List<Recipe>>(
-                                  context,
-                                  listen: false);
-                              List<Ingredient> missedIngredients = [];
-                              recipes.forEach(
-                                (r) {
-                                  missedIngredients.addAll(r.missedIngredients);
-                                },
-                              );
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ShoppingList(
-                                      ingredients: missedIngredients,
-                                    ),
-                                  ));
-                            },
+                            // onTap: () {
+                            //   List<Recipe> recipes = Provider.of<List<Recipe>>(
+                            //       context,
+                            //       listen: false);
+                            //   List<Ingredient> missedIngredients = [];
+                            //   recipes.forEach(
+                            //     (r) {
+                            //       missedIngredients.addAll(r.missedIngredients);
+                            //     },
+                            //   );
+                            //   print(
+                            //       "missedIngredients == ${missedIngredients.length}");
+                            //   Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) => ShoppingList(
+                            //           ingredients: missedIngredients,
+                            //         ),
+                            //       ));
+                            // },
                             child: Text(
                               "Hey John! 🍎",
                               style: Theme.of(context).textTheme.headline1,
@@ -135,9 +137,7 @@ class _HomeState extends State<Home> {
                                 uid,
                               );
                             }
-                            final Uint8List bytes = await file.readAsBytes();
 
-                            StaticStore.setImage(bytes);
                             print("done");
                           } on PlatformException catch (e) {
                             print("error while picking file");

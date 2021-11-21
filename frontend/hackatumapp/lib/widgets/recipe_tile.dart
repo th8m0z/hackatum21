@@ -85,6 +85,9 @@ class RecipeTile extends StatelessWidget {
                       color: Colors.black.withOpacity(0.4),
                     ),
                   ),
+                  SizedBox(
+                    height: Sc.v * 2,
+                  ),
                   Row(
                     children: [
                       /*Tag(

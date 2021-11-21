@@ -43,12 +43,12 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
           color: Color(0xFFfcd670),
           text: "Gluten-Free"));
     }
-    if (user.vegan == true) {
+    if (user.vegetarian == true) {
       tags.add(
         Tag(
-            textColor: Colors.orange[700],
-            color: Color(0xFFfcd670),
-            text: "Vegan"),
+            color: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).primaryColorDark,
+            text: "Vegetarian"),
       );
     }
     if (user.sustainable == true) {

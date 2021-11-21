@@ -111,7 +111,7 @@ class Recipe {
 
     List<Map<String, dynamic>> missedIngredientsMap = [];
     for (int i = 0; i < missedIngredients.length; i++) {
-      usedIngredientsMap.add(missedIngredients[i].toMap());
+      missedIngredientsMap.add(missedIngredients[i].toMap());
     }
     return {
       "id": id,

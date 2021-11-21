@@ -23,7 +23,7 @@ class _IngredientViewState extends State<IngredientView> {
         )
         .toList();
     return Container(
-      height: Sc.v * 10,
+      // height: Sc.v * 10,
       width: double.infinity,
       // decoration: BoxDecoration(
       //   color: Colors.red,
@@ -37,10 +37,17 @@ class _IngredientViewState extends State<IngredientView> {
       // ),
       // padding:
       //     EdgeInsets.only(top: Sc.v * 5, left: Sc.h * 2.5, right: Sc.h * 2.5),
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: ingredientTiles,
-      ),
+      child: ingredientTiles == null || ingredientTiles.isEmpty
+          ? Center(
+              child: Text(
+                "No ingredients yet.",
+                style: Theme.of(context).textTheme.caption,
+              ),
+            )
+          : ListView(
+              padding: EdgeInsets.zero,
+              children: ingredientTiles,
+            ),
     );
   }
 }

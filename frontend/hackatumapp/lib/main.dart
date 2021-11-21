@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,8 +33,14 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  // _fetchData() is your function to fetch data
+
+  Future<void> getFile() {}
+
   @override
   Widget build(BuildContext context) {
+    Duration fiveSeconds = const Duration(seconds: 5);
+    Timer.periodic(fiveSeconds, (Timer t) => getFile());
     return MultiProvider(
       providers: [
         StreamProvider.value(
