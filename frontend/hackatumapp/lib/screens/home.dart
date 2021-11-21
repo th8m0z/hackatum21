@@ -210,7 +210,7 @@ class _HomeState extends State<Home> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: StaticStore.image != null
-                                ? MemoryImage(StaticStore.image)
+                                ? StaticStore.image
                                 : NetworkImage(
                                     "https://cdn.pixabay.com/photo/2016/08/25/15/00/refrigerator-1619676_1280.jpg",
                                   ),

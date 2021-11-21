@@ -3,11 +3,11 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class StaticStore {
-  static Uint8List _image;
+  static MemoryImage _image;
 
-  static void setImage(Uint8List newImage) {
+  static void setImage(MemoryImage newImage) {
     _image = newImage;
   }
 
-  static Uint8List get image => _image;
+  static MemoryImage get image => _image;
 }

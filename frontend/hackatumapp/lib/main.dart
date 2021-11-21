@@ -7,6 +7,7 @@ import 'package:hackatumapp/screens/home.dart';
 import 'package:hackatumapp/screens/intro_screen.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/services/database.dart';
+import 'package:hackatumapp/services/image_store.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -33,15 +34,13 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
 
-
-    Timer.periodic(new Duration(seconds: 5), (timer) {
-      Home;
+    Timer.periodic(new Duration(seconds: 5), (timer) async {
+      MemoryImage image = await getFile();
+      StaticStore.setImage(image);
     });
   }
 
   // _fetchData() is your function to fetch data
-
-  Future<void> getFile() {}
 
   @override
   Widget build(BuildContext context) {
@@ -121,10 +120,10 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  static Future<Image> getFile() async {
+  static Future<MemoryImage> getFile() async {
     var uri = Uri.http("192.168.178.139:5000", "/get_fridge_cam");
     final request = await http.readBytes(uri);
-    return Image.memory(request);
+    return MemoryImage(request);
   }
 }
 
