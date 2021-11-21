@@ -46,6 +46,7 @@ dependencies:
   provider: ^6.0.1
   color_thief_flutter: ^1.0.2
   slider_button: ^1.0.0
+  flutter_swipe_button: ^1.1.0
 
 
 dev_dependencies:

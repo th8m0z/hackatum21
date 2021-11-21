@@ -57,30 +57,37 @@ class _MyAppState extends State<MyApp> {
           primaryColorDark: Color(0xFF1e824c),
           highlightColor: Color(0xFF6C464E),
           textTheme: TextTheme(
-              headline1: GoogleFonts.nunito(
-                fontWeight: FontWeight.w900,
-                fontSize: 36,
-                color: Colors.black,
-              ),
-              headline2: GoogleFonts.nunito(
-                fontWeight: FontWeight.w800,
-                fontSize: 28,
-                color: Colors.black,
-              ),
-              caption: GoogleFonts.nunito(
-                fontWeight: FontWeight.w800,
-                fontSize: 18,
-                color: Colors.black,
-              ),
-              bodyText1: GoogleFonts.nunito(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: Colors.white,
-              ),
-              button: GoogleFonts.nunito(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                  color: Colors.black.withOpacity(0.4))),
+            headline1: GoogleFonts.nunito(
+              fontWeight: FontWeight.w900,
+              fontSize: 36,
+              color: Colors.black,
+            ),
+            headline2: GoogleFonts.nunito(
+              fontWeight: FontWeight.w800,
+              fontSize: 28,
+              color: Colors.black,
+            ),
+            caption: GoogleFonts.nunito(
+              fontWeight: FontWeight.w800,
+              fontSize: 18,
+              color: Colors.black,
+            ),
+            bodyText1: GoogleFonts.nunito(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            bodyText2: GoogleFonts.nunito(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: Colors.white,
+            ),
+            button: GoogleFonts.nunito(
+              fontWeight: FontWeight.w800,
+              fontSize: 16,
+              color: Colors.black.withOpacity(0.4),
+            ),
+          ),
         ),
         home: Home(),
       ),

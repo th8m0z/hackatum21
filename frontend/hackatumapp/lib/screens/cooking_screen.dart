@@ -1,7 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/utils/sc.dart';
+import 'package:hackatumapp/widgets/instruction_widget.dart';
+import 'package:slider_button/slider_button.dart';
 
 class CookingScreen extends StatefulWidget {
   CookingScreen({
@@ -18,42 +21,92 @@ class CookingScreen extends StatefulWidget {
 class _CookingScreenState extends State<CookingScreen> {
   @override
   Widget build(BuildContext context) {
+    List<Widget> instructionWidgets = [];
+    for (int i = 0; i < widget.instructions.length; i++) {
+      instructionWidgets.add(
+        InstructionWidget(
+          instructionStep: widget.instructions[i],
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        padding:
-            EdgeInsets.only(top: Sc.v * 18, right: Sc.h * 4, left: Sc.h * 4),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              height: Sc.v * 40,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    widget.recipe.image,
+      body: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.only(
+                top: Sc.v * 18, right: Sc.h * 4, left: Sc.h * 4),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Container(
+                  height: Sc.v * 40,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                        widget.recipe.image,
+                      ),
+                    ),
                   ),
                 ),
+                SizedBox(
+                  height: Sc.v * 8,
+                ),
+                AutoSizeText(
+                  widget.recipe.title,
+                  style: Theme.of(context).textTheme.headline1.copyWith(
+                        color: Colors.black,
+                      ),
+                  maxLines: 1,
+                ),
+                SizedBox(height: Sc.v * 5),
+                ...instructionWidgets,
+                SizedBox(height: Sc.v * 8),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment(0, 0.9),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: Sc.h * 5),
+              child: SwipeButton(
+                onSwipeEnd: () {
+                  Navigator.pop(context);
+                },
+                activeTrackColor:
+                    Theme.of(context).primaryColor.withOpacity(0.3),
+                height: Sc.h * 20,
+                thumbPadding: EdgeInsets.all(3),
+                activeThumbColor: Theme.of(context).primaryColorDark,
+                thumb: Icon(
+                  Icons.check,
+                  size: Sc.h * 10,
+                  color: Theme.of(context).primaryColor,
+                ),
+                elevation: 2,
+                child: Text(
+                  "Recipe cooked".toUpperCase(),
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onSwipe: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Swipped"),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                },
               ),
             ),
-            SizedBox(
-              height: Sc.v * 8,
-            ),
-            AutoSizeText(
-              widget.recipe.title,
-              style: Theme.of(context).textTheme.headline1.copyWith(
-                    color: Colors.black,
-                  ),
-              maxLines: 1,
-            ),
-            AutoSizeText(
-              widget.instructions[0].text,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

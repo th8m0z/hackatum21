@@ -132,7 +132,7 @@ class ExternalAPI {
   }
 
   static Future<List<InstructionStep>> getInstructionsById(int recipeId) async {
-    final queryParameters = {"apiKey": apiKey, "stepBreakdown": "false"};
+    final queryParameters = {"apiKey": apiKey, "stepBreakdown": "true"};
     final Uri uri = Uri.https(
         apiBase, "/recipes/${recipeId}/analyzedInstructions", queryParameters);
     final res = await http.get(uri);

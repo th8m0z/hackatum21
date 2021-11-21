@@ -155,11 +155,11 @@ class _HomeState extends State<Home> {
                   }
                   List<Recipe> cookableRecipes =
                       await ExternalAPI.getCookableRecipes(allIngredients);
-                  // for (int i = 0; i < cookableRecipes.length; i++) {
-                  //   List instructions = await ExternalAPI.getInstructionsById(
-                  //       cookableRecipes[i].id);
-                  //   print("instructions == $instructions");
-                  // }
+                  for (int i = 0; i < cookableRecipes.length; i++) {
+                    List instructions = await ExternalAPI.getInstructionsById(
+                        cookableRecipes[i].id);
+                    print("instructions == $instructions");
+                  }
 
                   // List<Color> colors = [];
                   // for (int i = 0; i < cookableRecipes.length; i++) {

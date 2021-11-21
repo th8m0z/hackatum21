@@ -17,7 +17,7 @@ class Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: Sc.h * 3, vertical: Sc.h * 1),
       height: 24,
       decoration: BoxDecoration(
         boxShadow: [
