@@ -13,6 +13,7 @@ class InstructionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: Sc.v * 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -24,7 +25,7 @@ class InstructionWidget extends StatelessWidget {
           )
         ],
       ),
-      height: Sc.v * 60,
+      height: instructionStep.text.length / 1.5 + 25,
       child: Row(
         children: [
           Container(

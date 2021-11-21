@@ -9,7 +9,7 @@ class DioUploadService {
     });
 
     var response = await Dio().post(
-      'http://192.168.178.24:5000/upload_receipt?user_id=$uid',
+      'http://192.168.178.139:5000/upload_receipt?user_id=$uid',
       data: formData,
     );
     print('\n\n');

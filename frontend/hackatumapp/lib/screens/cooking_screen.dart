@@ -4,7 +4,6 @@ import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/instruction_widget.dart';
-import 'package:slider_button/slider_button.dart';
 
 class CookingScreen extends StatefulWidget {
   CookingScreen({
@@ -69,40 +68,50 @@ class _CookingScreenState extends State<CookingScreen> {
             ),
           ),
           Align(
-            alignment: Alignment(0, 0.9),
+            alignment: Alignment(0, 1),
             child: Container(
+              height: Sc.v * 35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
+              ),
               padding: EdgeInsets.symmetric(horizontal: Sc.h * 5),
-              child: SwipeButton(
-                onSwipeEnd: () {
-                  Navigator.pop(context);
-                },
-                activeTrackColor:
-                    Theme.of(context).primaryColor.withOpacity(0.3),
-                height: Sc.h * 20,
-                thumbPadding: EdgeInsets.all(3),
-                activeThumbColor: Theme.of(context).primaryColorDark,
-                thumb: Icon(
-                  Icons.check,
-                  size: Sc.h * 10,
-                  color: Theme.of(context).primaryColor,
-                ),
-                elevation: 2,
-                child: Text(
-                  "Recipe cooked".toUpperCase(),
-                  style: TextStyle(
+              child: Center(
+                child: SwipeButton(
+                  onSwipeEnd: () {
+                    Navigator.pop(context);
+                  },
+                  activeTrackColor:
+                      Theme.of(context).primaryColor.withOpacity(0.3),
+                  height: Sc.h * 20,
+                  thumbPadding: EdgeInsets.all(3),
+                  activeThumbColor: Theme.of(context).primaryColorDark,
+                  thumb: Icon(
+                    Icons.check,
+                    size: Sc.h * 10,
                     color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                onSwipe: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Swipped"),
-                      backgroundColor: Colors.green,
+                  elevation: 2,
+                  child: Text(
+                    "Recipe cooked".toUpperCase(),
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                },
+                  ),
+                  onSwipe: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Swipped"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
