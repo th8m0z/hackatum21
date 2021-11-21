@@ -44,6 +44,14 @@ class Database {
     });
   }
 
+  static Stream<UserModel> userModel(String uid) {
+    return _db.collection("users").doc(uid).snapshots().asBroadcastStream().map(
+          (event) => UserModel.fromMap(
+            event.data(),
+          ),
+        );
+  }
+
   static Stream<List<Recipe>> cookingList(String uid) {
     return _db
         .collection("users")
@@ -65,5 +73,4 @@ class Database {
       }
     });
   }
-
 }

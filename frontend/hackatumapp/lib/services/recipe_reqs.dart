@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 // spoonacular
 const apiBase = "api.spoonacular.com";
-const apiKey = "59628b6f8c6b4b098adb6d13eb2cc084";
+const apiKey = "d84332fdaf3441b188d50e6f5e88eb52";
 const searchRoute = "/recipes/complexSearch";
 const findByIngredientsRoute = "/recipes/findByIngredients";
 
@@ -44,7 +44,7 @@ class ExternalAPI {
   }
 
   static Future<List<Recipe>> getCookableRecipes(
-      List<Ingredient> existingIngredients) async {
+      List<Ingredient> existingIngredients, UserModel userModel) async {
     var includeIngredients =
         existingIngredients.map((ingredient) => ingredient.name).join(",");
 
@@ -77,7 +77,7 @@ class ExternalAPI {
   static List<Recipe> _processRecipe(List recipeObjsRaw, bool amountIsInt) {
     List<Recipe> recipeObjsProcessed = [];
     for (var recipe in recipeObjsRaw) {
-      if(recipe["analyzedInstructions"].length == 0) {
+      if (recipe["analyzedInstructions"].length == 0) {
         continue;
       }
 

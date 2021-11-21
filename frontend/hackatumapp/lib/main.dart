@@ -32,6 +32,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        StreamProvider.value(
+            value: Database.userModel("C6OvTqu5Ui4wFOjqmGRw"),
+            initialData: null),
         StreamProvider<List<Ingredient>>.value(
             value: Database.ingredientStream("C6OvTqu5Ui4wFOjqmGRw"),
             initialData: []),
@@ -59,12 +62,18 @@ class _MyAppState extends State<MyApp> {
           textTheme: TextTheme(
             headline1: GoogleFonts.nunito(
               fontWeight: FontWeight.w900,
-              fontSize: 36,
+              fontSize: 34,
               color: Colors.black,
             ),
             headline2: GoogleFonts.nunito(
               fontWeight: FontWeight.w800,
               fontSize: 28,
+              color: Colors.black,
+            ),
+            headline3: GoogleFonts.nunito(
+              fontWeight: FontWeight.w900,
+              fontStyle: FontStyle.italic,
+              fontSize: 20,
               color: Colors.black,
             ),
             caption: GoogleFonts.nunito(

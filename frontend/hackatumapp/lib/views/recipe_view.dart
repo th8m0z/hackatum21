@@ -66,10 +66,9 @@ class RecipeView extends StatelessWidget {
                 Flexible(
                   flex: 1,
                   child: Container(
-                    height: 145,
-                    width: 145,
+                    height: Sc.v * 30,
+                    width: Sc.h * 30,
                     decoration: BoxDecoration(
-                      color: Colors.red,
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
                         fit: BoxFit.cover,

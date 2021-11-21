@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/button.dart';
@@ -24,11 +25,18 @@ class _FridgeViewState extends State<FridgeView> {
               color: Colors.lightBlue[200],
               borderRadius: BorderRadius.circular(25),
             ),
-            child: Center(
-              child: Text(
-                "🥛",
-                style: TextStyle(fontSize: Sc.h * 18),
-              ),
+            child: Stack(
+              children: [
+                Center(
+                  child: AutoSizeText(
+                    "4 🥛",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline1
+                        .copyWith(color: Colors.blue[900], fontSize: Sc.h * 10),
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
