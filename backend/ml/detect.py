@@ -60,9 +60,12 @@ def analyze_pic(img):
         cropped_img = img[y:y + h, x:x + w]
         prediction = predict_product(cropped_img)
         if prediction is not None:
-            product = (get_product(prediction['tagName']))
-            print(prediction['tagName'])
-            db.collection('users').document('C6OvTqu5Ui4wFOjqmGRw').collection('ingredients').document(str(product["id"])).set(product)
+            try:
+                product = (get_product(prediction['tagName']))
+                print(prediction['tagName'])
+                db.collection('users').document('C6OvTqu5Ui4wFOjqmGRw').collection('ingredients').document(str(product["id"])).set(product)
+            except Exception:
+                pass
         # if prediction is not None:
         #     write_text(img, x, y, prediction['tagName'])
 
