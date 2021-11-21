@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hackatumapp/screens/intro_screen.dart';
 import 'package:hackatumapp/screens/recipe_list_screen.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/services/image_store.dart';
@@ -60,9 +61,18 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "Hey John! 🍎",
-                            style: Theme.of(context).textTheme.headline1,
+                          GestureDetector(
+                            // onTap: () {
+                            //   Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) => IntroScreen(),
+                            //       ));
+                            // },
+                            child: Text(
+                              "Hey John! 🍎",
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
                           ),
                           // SizedBox(
                           //   height: Sc.v * 3,
