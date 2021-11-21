@@ -48,7 +48,7 @@ class ExternalAPI {
     var includeIngredients =
         existingIngredients.map((ingredient) => ingredient.name).join(",");
 
-    final queryParameters = {
+    var queryParameters = {
       "apiKey": apiKey,
       "includeIngredients": includeIngredients,
       "number": "10",
@@ -59,6 +59,16 @@ class ExternalAPI {
       "sort": "max-used-ingredients",
       "query": ""
     };
+
+    if (userModel.glutenFree) {
+      queryParameters["intolerances"] = "gluten";
+    }
+    if (userModel.vegetarian) {
+      queryParameters["diet"] = "vegetarian";
+    }
+    if (userModel.vegan) {
+      queryParameters["diet"] = "vegan";
+    }
 
     final uri = Uri.https(apiBase, searchRoute, queryParameters);
     final res = await http.get(uri);
