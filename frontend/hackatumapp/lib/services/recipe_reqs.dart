@@ -77,6 +77,10 @@ class ExternalAPI {
   static List<Recipe> _processRecipe(List recipeObjsRaw, bool amountIsInt) {
     List<Recipe> recipeObjsProcessed = [];
     for (var recipe in recipeObjsRaw) {
+      if(recipe["analyzedInstructions"].length == 0) {
+        continue;
+      }
+
       // used ingredients
       List<Ingredient> usedIngredients = [];
       for (var ingredient in recipe["usedIngredients"]) {
