@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 from collections import  defaultdict
 import re
+import json
 
 import firebase_admin
 from firebase_admin import credentials
@@ -84,7 +85,7 @@ def update_shopping_list():
         id = element.to_dict().get('id', -1)
         if id not in update_dict.keys():
             ids_to_delete.append(element.id)
-    
+
     upload_data = []
     for k, v in update_dict.items():
         upload_data.append({
@@ -93,10 +94,10 @@ def update_shopping_list():
             "name": info_for_id[k][0],
             "image": info_for_id[k][1]
         })
-    
+
     for element in ids_to_delete:
         db.collection(u'users').document(u'C6OvTqu5Ui4wFOjqmGRw').collection(u'shopping_list').document(element).delete()
-    
+
     for element in upload_data:
         db.collection(u'users').document(u'C6OvTqu5Ui4wFOjqmGRw').collection(u'shopping_list').add(element)
 
@@ -115,7 +116,8 @@ category_co2_scores = {
 """
 @app.route('/recipe_co2_score', methods=['POST'])
 def get_co2_score():
-    ingredients = request.get_json(force=True)["ingredients"]
+    ingredients = json.loads(request.form['ingredients'])
+
     score = 10
     ingredients_rated = 0
 
