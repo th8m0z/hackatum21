@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 import 'package:hackatumapp/screens/recipe_list_screen.dart';
 import 'package:hackatumapp/services/data_format.dart';
-import 'package:hackatumapp/services/database.dart';
+
 import 'package:hackatumapp/services/upload_service.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/views/fridge.dart';
@@ -11,7 +11,7 @@ import 'package:hackatumapp/widgets/button.dart';
 import 'package:hackatumapp/widgets/tag.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:hackatumapp/recipe_reqs.dart';
+import 'package:hackatumapp/services/recipe_reqs.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -24,84 +24,103 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Sc().init(context);
+
     List<Ingredient> allIngredients = Provider.of<List<Ingredient>>(context);
+    List<Recipe> cookingList = Provider.of<List<Recipe>>(context);
+
+    List<RecipeView> recipeViews = cookingList.map(
+      (item) {
+        return RecipeView(
+          recipe: item,
+        );
+      },
+    ).toList();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        padding: EdgeInsets.only(left: 22, right: 22, top: 40),
+        padding:
+            EdgeInsets.only(left: Sc.h * 5, right: Sc.h * 5, top: Sc.v * 15),
         // color: Colors.red,
-        child: Stack(
+        child: Column(
           children: [
-            Align(
-              alignment: Alignment(0, -0.975),
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Hey John!",
-                          style: Theme.of(context).textTheme.headline2,
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Hey John!",
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                      SizedBox(
+                        height: Sc.v * 3,
+                      ),
+                      Container(
+                        width: Sc.h * 65,
+                        child: Wrap(
+                          spacing: Sc.h * 2,
+                          runSpacing: Sc.v * 1.5,
+                          children: [
+                            Tag(
+                              textColor: Colors.green[900],
+                              color: Theme.of(context).primaryColor,
+                              text: "Vegan",
+                            ),
+                            Tag(
+                                textColor: Colors.orange[700],
+                                color: Color(0xFFfcd670),
+                                text: "Gluten-Free"),
+                            Tag(
+                              text: "Sustainable",
+                              textColor: Colors.brown[900],
+                              color: Theme.of(context)
+                                  .highlightColor
+                                  .withOpacity(0.8),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          width: 190,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Tag(
-                                color: Theme.of(context).primaryColor,
-                                text: "Vegan",
-                              ),
-                              Tag(
-                                  text: "Protein",
-                                  color: Theme.of(context).highlightColor),
-                              Tag(
-                                text: "Sustainable",
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    Button(
-                      hasBoxshadow: true,
-                      opacityOnly: true,
-                      borderRadius: 100,
-                      color: Theme.of(context).primaryColorLight,
-                      child: Icon(Icons.add),
-                      height: Sc.h * 14,
-                      width: Sc.h * 14,
-                      onTap: () async {
+                      )
+                    ],
+                  ),
+                  Button(
+                    hasBoxshadow: true,
+                    opacityOnly: true,
+                    borderRadius: 100,
+                    color: Theme.of(context).primaryColor,
+                    child: Icon(Icons.add),
+                    height: Sc.h * 14,
+                    width: Sc.h * 14,
+                    onTap: () async {
+                      try {
                         final ImagePicker _picker = ImagePicker();
                         XFile image = await _picker.pickImage(
                             source: ImageSource.gallery);
                         String uid = "C6OvTqu5Ui4wFOjqmGRw";
-                        await DioUploadService.uploadPhotos(
-                          image.path,
-                          uid,
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                        if (image != null) {
+                          await DioUploadService.uploadPhotos(
+                            image.path,
+                            uid,
+                          );
+                        }
+                      } on PlatformException catch (e) {
+                        print("error while picking file");
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
-            Align(
-              alignment: Alignment(0, -0.55),
-              child: Container(
-                height: Sc.h * 98,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withOpacity(0.035),
-                ),
-                child: FridgeView(),
+            SizedBox(height: Sc.v * 6),
+            Container(
+              height: Sc.h * 98,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                // color: Colors.black.withOpacity(0.035),
               ),
+              child: FridgeView(),
             ),
             Align(
               alignment: Alignment(0, 0.6),
@@ -109,12 +128,22 @@ class _HomeState extends State<Home> {
                 height: Sc.v * 45,
                 width: double.infinity,
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: Sc.h * 2.5,
+                      spreadRadius: Sc.h * 0.1,
+                      color: Colors.black.withOpacity(0.1),
+                    )
+                  ],
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withOpacity(0.035),
+                  color: Colors.white,
                 ),
-                child: RecipeView(),
+                child: PageView(
+                  children: recipeViews,
+                ),
               ),
             ),
+            SizedBox(height: Sc.v * 8),
             Align(
               alignment: Alignment(0, 0.92),
               child: Button(
@@ -125,7 +154,24 @@ class _HomeState extends State<Home> {
                     print(allIngredients[i].name);
                   }
                   List<Recipe> cookableRecipes =
-                      await getCookableRecipes(allIngredients);
+                      await ExternalAPI.getCookableRecipes(allIngredients);
+                  for (int i = 0; i < cookableRecipes.length; i++) {
+                    List instructions = await ExternalAPI.getInstructionsById(
+                        cookableRecipes[i].id);
+                    print("instructions == $instructions");
+                  }
+
+                  // List<Color> colors = [];
+                  // for (int i = 0; i < cookableRecipes.length; i++) {
+                  //   List<int> rgbColors =
+                  //       await getColorFromUrl(cookableRecipes[i].image);
+                  //   print("rgbColor == ${rgbColors.runtimeType}");
+                  //   colors.add(
+                  //     Color.fromARGB(
+                  //         255, rgbColors[0], rgbColors[1], rgbColors[2]),
+                  //   );
+                  // }
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -134,8 +180,8 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   );
-                  String co2Score = await getRecipeCO2Score(cookableRecipes[0]);
-                  print("co2 score == $co2Score");
+                  // String co2Score = await getRecipeCO2Score(cookableRecipes[0]);
+                  // print("co2 score == $co2Score");
                 },
                 child: Text(
                   "GET CURATED RECIPES",
@@ -145,7 +191,7 @@ class _HomeState extends State<Home> {
                 width: double.infinity,
                 borderRadius: 2000,
                 hasBoxshadow: true,
-                color: Colors.greenAccent[400],
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ],

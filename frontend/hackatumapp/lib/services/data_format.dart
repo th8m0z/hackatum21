@@ -7,7 +7,7 @@ class Ingredient {
   final String originalString;
   final String originalName;
   final String image;
-  final List<String> meta;
+  final List<dynamic> meta;
 
   Ingredient(
       {this.id,
@@ -60,7 +60,6 @@ class Ingredient {
       "meta": meta,
     };
   }
-
 }
 
 class Recipe {
@@ -70,7 +69,6 @@ class Recipe {
   final List<Ingredient> usedIngredients;
   final int id;
   final String title;
-  final String imageType;
   final bool vegetarian;
   final bool vegan;
   final bool glutenFree;
@@ -90,7 +88,6 @@ class Recipe {
       this.usedIngredients,
       this.missedIngredients,
       this.id,
-      this.imageType,
       this.cheap,
       this.dairyFree,
       this.image,
@@ -105,11 +102,19 @@ class Recipe {
       this.veryPopular});
 
   Map<String, dynamic> toMap() {
+    List<Map<String, dynamic>> usedIngredientsMap = [];
+    for (int i = 0; i < usedIngredients.length; i++) {
+      usedIngredientsMap.add(usedIngredients[i].toMap());
+    }
+
+    List<Map<String, dynamic>> missedIngredientsMap = [];
+    for (int i = 0; i < missedIngredients.length; i++) {
+      usedIngredientsMap.add(missedIngredients[i].toMap());
+    }
     return {
       "id": id,
       "title": title,
       "image": image,
-      "imageType": imageType,
       "healthScore": healthScore,
       "pricePerServing": pricePerServing,
       "vegetarian": vegetarian,
@@ -120,31 +125,65 @@ class Recipe {
       "dairyFree": dairyFree,
       "cheap": cheap,
       "sustainable": sustainable,
-      "usedIngredients": usedIngredients.toList(),
+      "usedIngredients": usedIngredientsMap,
       "usedIngredientsCount": usedIngredientCount,
-      "missedIngredients": missedIngredients.toList(),
+      "missedIngredients": missedIngredientsMap,
       "missedIngredientsCount": missedIngredientCount
     };
   }
 
-  // factory Recipe.fromMap(Map<String, dynamic> data) {
-  //   return Recipe(
-  //     glutenFree: data["glutenFree"],
-  //     dairyFree: data["dairyFree"],
-  //     image: data["image"],
-  //     title: data["title"],
-  //     vegan: data["vegan"],
-  //     vegetarian: data["vegetarian"],
-  //     veryHealthy: data["veryHealthy"],
-  //     veryPopular: data["veryPopular"],
-  //     sustainable: data["sustainable"],
-  //     pricePerServing: data["pricePerServing"],
-  //     healthScore: data["healthScore"],
-  //     id: data["id"],
-  //     unusedIngredients:
-  //   );
-  // }
+  factory Recipe.fromMap(Map<String, dynamic> data) {
+    List<Ingredient> usedIngredientsTemp = [];
 
+    if (data["usedIngredients"] != null) {
+      for (int i = 0; i < data["usedIngredients"].length; i++) {
+        usedIngredientsTemp.add(
+          Ingredient.fromMap(
+            data["usedIngredients"][i],
+          ),
+        );
+      }
+    }
+    List<Ingredient> missedIngredientsTemp = [];
+    if (data["missedIngredients"] != null) {
+      for (int i = 0; i < data["missedIngredients"].length; i++) {
+        usedIngredientsTemp.add(
+          Ingredient.fromMap(
+            data["missedIngredients"][i],
+          ),
+        );
+      }
+    }
+
+    return Recipe(
+        cheap: data["cheap"],
+        glutenFree: data["glutenFree"],
+        dairyFree: data["dairyFree"],
+        image: data["image"],
+        title: data["title"],
+        vegan: data["vegan"],
+        vegetarian: data["vegetarian"],
+        veryHealthy: data["veryHealthy"],
+        veryPopular: data["veryPopular"],
+        sustainable: data["sustainable"],
+        pricePerServing: data["pricePerServing"],
+        healthScore: data["healthScore"],
+        id: data["id"],
+        usedIngredients: usedIngredientsTemp,
+        missedIngredients: missedIngredientsTemp,
+        missedIngredientCount: data["missedIngredientsCount"],
+        usedIngredientCount: data["usedIngredientsCount"]);
+  }
+}
+
+class InstructionStep {
+  final int number;
+  final String text;
+
+  InstructionStep({
+    this.number,
+    this.text
+  });
 }
 
 class UserModel {
