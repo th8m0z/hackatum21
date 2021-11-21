@@ -4,12 +4,12 @@ import 'package:http/http.dart' as http;
 
 // spoonacular
 const apiBase = "api.spoonacular.com";
-const apiKey = "d84332fdaf3441b188d50e6f5e88eb52";
+const apiKey = "b1db01684f2a4b4f841e15e904fea6e4";
 const searchRoute = "/recipes/complexSearch";
 const findByIngredientsRoute = "/recipes/findByIngredients";
 
 // intl firebase functions
-const internalApiBase = "192.168.178.24:5000";
+const internalApiBase = "192.168.178.139:5000";
 const recipeCO2Route = "/recipe_co2_score";
 const updateShoppingRoute = "/update_shopping_list";
 
@@ -168,8 +168,7 @@ class InternalAPI {
         .post(uri, body: {"ingredients": convert.jsonEncode(ingredients)});
     if (res.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(res.body) as Map<String, dynamic>;
-
-      return int.tryParse(jsonResponse["score"]);
+      return jsonResponse["score"].round();
     } else {
       print('Request failed with status: ${res.statusCode}.');
       return null;

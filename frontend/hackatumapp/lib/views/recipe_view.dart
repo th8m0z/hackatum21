@@ -51,7 +51,7 @@ class RecipeView extends StatelessWidget {
                   child: Column(
                     children: [
                       AutoSizeText(
-                        recipe != null ? recipe.title : "Gebratener Lachs",
+                        recipe != null ? recipe.title : "Erbsensuppe",
                         minFontSize: 10,
                         maxFontSize: 20,
                         style: Theme.of(context).textTheme.caption,

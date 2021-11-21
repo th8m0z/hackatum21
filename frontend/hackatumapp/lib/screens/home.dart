@@ -137,7 +137,7 @@ class _HomeState extends State<Home> {
                             }
                             final Uint8List bytes = await file.readAsBytes();
 
-                            ImageStore.setImage(bytes);
+                            StaticStore.setImage(bytes);
                             print("done");
                           } on PlatformException catch (e) {
                             print("error while picking file");
@@ -209,8 +209,8 @@ class _HomeState extends State<Home> {
                           borderRadius: BorderRadius.circular(15),
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: ImageStore.image != null
-                                ? MemoryImage(ImageStore.image)
+                            image: StaticStore.image != null
+                                ? MemoryImage(StaticStore.image)
                                 : NetworkImage(
                                     "https://cdn.pixabay.com/photo/2016/08/25/15/00/refrigerator-1619676_1280.jpg",
                                   ),
@@ -268,10 +268,11 @@ class _HomeState extends State<Home> {
                       await ExternalAPI.getCookableRecipes(
                           allIngredients, userModel);
                   for (int i = 0; i < cookableRecipes.length; i++) {
-                    List instructions = await ExternalAPI.getInstructionsById(
-                      cookableRecipes[i].id,
+                    int co2Score = await InternalAPI.getRecipeCO2Score(
+                      cookableRecipes[i],
                     );
-                    print("instructions == $instructions");
+                    cookableRecipes[i].co2Score = co2Score;
+                    print("instructions == $co2Score");
                   }
 
                   // List<Color> colors = [];

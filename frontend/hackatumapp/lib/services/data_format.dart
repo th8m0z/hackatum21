@@ -77,6 +77,7 @@ class Recipe {
   final bool cheap;
   final bool veryPopular;
   final bool sustainable;
+  int co2Score;
 
   final double healthScore;
   final double pricePerServing;
@@ -96,6 +97,7 @@ class Recipe {
       this.pricePerServing,
       this.sustainable,
       this.title,
+      this.co2Score,
       this.vegan,
       this.vegetarian,
       this.veryHealthy,

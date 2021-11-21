@@ -66,8 +66,10 @@ class _CookingScreenState extends State<CookingScreen> {
                 ),
                 Container(
                   height: Sc.v * 30,
-                  child: IngredientView(
-                      ingredients: widget.recipe.usedIngredients),
+                  child: IngredientView(ingredients: [
+                    ...widget.recipe.usedIngredients,
+                    ...widget.recipe.missedIngredients
+                  ]),
                 ),
                 SizedBox(height: Sc.v * 5),
                 ...instructionWidgets,

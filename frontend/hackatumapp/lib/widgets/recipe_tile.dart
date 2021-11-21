@@ -8,11 +8,9 @@ import 'package:hackatumapp/widgets/button.dart';
 import 'package:hackatumapp/widgets/tag.dart';
 
 class RecipeTile extends StatelessWidget {
-  RecipeTile({Key key, this.recipe, this.color, this.co2Score})
-      : super(key: key);
+  RecipeTile({Key key, this.recipe, this.color}) : super(key: key);
   final Recipe recipe;
   final Color color;
-  final String co2Score;
 
   @override
   Widget build(BuildContext context) {
@@ -89,15 +87,15 @@ class RecipeTile extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Tag(
+                      /*Tag(
                         hasBoxShadow: false,
                         color: Colors.red,
                         text: recipe.healthScore.toString(),
-                      ),
+                      ), removed due to bloat */
                       Tag(
                         hasBoxShadow: false,
                         color: Colors.green[900],
-                        text: co2Score,
+                        text: "CO2 Score: " + recipe.co2Score.toString(),
                       ),
                     ],
                   )
