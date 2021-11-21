@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hackatumapp/screens/intro_screen.dart';
 import 'package:hackatumapp/screens/recipe_list_screen.dart';
+import 'package:hackatumapp/screens/shopping_list.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/services/image_store.dart';
 import 'package:hackatumapp/services/upload_service.dart';
@@ -31,7 +32,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Sc().init(context);
-
     List<Ingredient> allIngredients = Provider.of<List<Ingredient>>(context);
     List<Recipe> cookingList = Provider.of<List<Recipe>>(context);
 
@@ -62,13 +62,24 @@ class _HomeState extends State<Home> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           GestureDetector(
-                            // onTap: () {
-                            //   Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //         builder: (context) => IntroScreen(),
-                            //       ));
-                            // },
+                            onTap: () {
+                              List<Recipe> recipes = Provider.of<List<Recipe>>(
+                                  context,
+                                  listen: false);
+                              List<Ingredient> missedIngredients = [];
+                              recipes.forEach(
+                                (r) {
+                                  missedIngredients.addAll(r.missedIngredients);
+                                },
+                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ShoppingList(
+                                      ingredients: missedIngredients,
+                                    ),
+                                  ));
+                            },
                             child: Text(
                               "Hey John! 🍎",
                               style: Theme.of(context).textTheme.headline1,
@@ -185,7 +196,9 @@ class _HomeState extends State<Home> {
                     },
                     children: [
                       Container(
-                        child: IngredientView(),
+                        child: IngredientView(
+                          ingredients: allIngredients,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white,
@@ -209,7 +222,7 @@ class _HomeState extends State<Home> {
                 ),
                 SizedBox(height: Sc.v * 8),
                 AutoSizeText(
-                  "Your Recipes",
+                  "${cookingList.length} Recipes",
                   textAlign: TextAlign.start,
                   style: Theme.of(context).textTheme.headline3,
                 ),
@@ -245,7 +258,8 @@ class _HomeState extends State<Home> {
               child: Button(
                 opacityOnly: true,
                 onTap: () async {
-                  UserModel userModel = Provider.of<UserModel>(context);
+                  UserModel userModel =
+                      Provider.of<UserModel>(context, listen: false);
                   print("allIngredients == $allIngredients");
                   for (int i = 0; i < allIngredients.length; i++) {
                     print(allIngredients[i].name);

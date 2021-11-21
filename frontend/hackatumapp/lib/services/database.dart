@@ -31,6 +31,11 @@ class Database {
     );
   }
 
+  static Future<void> updateUser(
+      String uid, Map<String, dynamic> newData) async {
+    await _db.collection("users").doc(uid).update(newData);
+  }
+
   static Future<bool> addToShoppingList(String uid, Recipe recipe) {
     return _db
         .collection("users")

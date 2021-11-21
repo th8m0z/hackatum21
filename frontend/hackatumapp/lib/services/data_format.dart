@@ -147,7 +147,7 @@ class Recipe {
     List<Ingredient> missedIngredientsTemp = [];
     if (data["missedIngredients"] != null) {
       for (int i = 0; i < data["missedIngredients"].length; i++) {
-        usedIngredientsTemp.add(
+        missedIngredientsTemp.add(
           Ingredient.fromMap(
             data["missedIngredients"][i],
           ),
@@ -180,10 +180,7 @@ class InstructionStep {
   final int number;
   final String text;
 
-  InstructionStep({
-    this.number,
-    this.text
-  });
+  InstructionStep({this.number, this.text});
 }
 
 class UserModel {

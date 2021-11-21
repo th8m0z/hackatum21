@@ -5,11 +5,14 @@ import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/services/database.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/button.dart';
+import 'package:hackatumapp/widgets/tag.dart';
 
 class RecipeTile extends StatelessWidget {
-  RecipeTile({Key key, Recipe this.recipe, this.color}) : super(key: key);
+  RecipeTile({Key key, this.recipe, this.color, this.co2Score})
+      : super(key: key);
   final Recipe recipe;
   final Color color;
+  final String co2Score;
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +83,23 @@ class RecipeTile extends StatelessWidget {
                     "${recipe.missedIngredientCount} missing ingredients",
                     style: GoogleFonts.nunito(
                       fontWeight: FontWeight.w500,
+                      fontSize: Sc.h * 3.5,
                       color: Colors.black.withOpacity(0.4),
                     ),
+                  ),
+                  Row(
+                    children: [
+                      Tag(
+                        hasBoxShadow: false,
+                        color: Colors.red,
+                        text: recipe.healthScore.toString(),
+                      ),
+                      Tag(
+                        hasBoxShadow: false,
+                        color: Colors.green[900],
+                        text: co2Score,
+                      ),
+                    ],
                   )
                 ],
               ),

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hackatumapp/screens/home.dart';
+import 'package:hackatumapp/screens/intro_screen.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/services/database.dart';
 import 'package:hackatumapp/utils/sc.dart';
@@ -11,7 +12,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -98,7 +101,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        home: Home(),
+        home: IntroScreen(),
       ),
     );
   }

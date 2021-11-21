@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/utils/sc.dart';
+import 'package:hackatumapp/views/ingredient_list_view.dart';
 import 'package:hackatumapp/widgets/instruction_widget.dart';
+import 'package:provider/provider.dart';
 
 class CookingScreen extends StatefulWidget {
   CookingScreen({
@@ -20,6 +22,7 @@ class CookingScreen extends StatefulWidget {
 class _CookingScreenState extends State<CookingScreen> {
   @override
   Widget build(BuildContext context) {
+    List<Ingredient> ingredients = Provider.of<List<Ingredient>>(context);
     List<Widget> instructionWidgets = [];
     for (int i = 0; i < widget.instructions.length; i++) {
       instructionWidgets.add(
@@ -61,9 +64,17 @@ class _CookingScreenState extends State<CookingScreen> {
                       ),
                   maxLines: 1,
                 ),
+                Container(
+                  height: Sc.v * 30,
+                  child: IngredientView(
+                      ingredients: widget.recipe.usedIngredients),
+                ),
                 SizedBox(height: Sc.v * 5),
                 ...instructionWidgets,
                 SizedBox(height: Sc.v * 8),
+                SizedBox(
+                  height: Sc.v * 30,
+                )
               ],
             ),
           ),
@@ -103,14 +114,6 @@ class _CookingScreenState extends State<CookingScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onSwipe: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Swipped"),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  },
                 ),
               ),
             ),

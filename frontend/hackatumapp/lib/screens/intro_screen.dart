@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackatumapp/screens/home.dart';
+import 'package:hackatumapp/services/database.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/button.dart';
 import 'package:hackatumapp/widgets/quiz_button.dart';
@@ -9,6 +10,7 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Sc().init(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -56,6 +58,7 @@ class IntroScreen extends StatelessWidget {
                           width: Sc.h * 4,
                         ),
                         QuizButton(
+                          onDeselect: (String s) {},
                           caption: "Gluten-Free",
                           color: Colors.transparent,
                         ),

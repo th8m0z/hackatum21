@@ -5,7 +5,8 @@ import 'package:hackatumapp/utils/sc.dart';
 import 'package:provider/provider.dart';
 
 class IngredientView extends StatefulWidget {
-  IngredientView({Key key}) : super(key: key);
+  final List<Ingredient> ingredients;
+  IngredientView({Key key, this.ingredients}) : super(key: key);
 
   @override
   _IngredientViewState createState() => _IngredientViewState();
@@ -14,8 +15,7 @@ class IngredientView extends StatefulWidget {
 class _IngredientViewState extends State<IngredientView> {
   @override
   Widget build(BuildContext context) {
-    List<Ingredient> ingredients = Provider.of<List<Ingredient>>(context);
-    List<IngredientTile> ingredientTiles = ingredients
+    List<IngredientTile> ingredientTiles = widget.ingredients
         .map(
           (e) => IngredientTile(
             ingredient: e,

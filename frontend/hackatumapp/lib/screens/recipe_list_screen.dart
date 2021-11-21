@@ -4,6 +4,7 @@ import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:hackatumapp/widgets/recipe_tile.dart';
 import 'package:hackatumapp/widgets/tag.dart';
+import 'package:provider/provider.dart';
 
 class RecipeListScreen extends StatefulWidget {
   RecipeListScreen({
@@ -20,6 +21,7 @@ class RecipeListScreen extends StatefulWidget {
 class _RecipeListScreenState extends State<RecipeListScreen> {
   @override
   Widget build(BuildContext context) {
+    UserModel user = Provider.of<UserModel>(context);
     widget.recipes
         .sort((r1, r2) => r1.missedIngredientCount - r2.missedIngredientCount);
     Sc().init(context);
@@ -34,32 +36,37 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
         ),
       );
     }
-
+    List<Tag> tags = [];
+    if (user.glutenFree == true) {
+      tags.add(Tag(
+          textColor: Colors.orange[700],
+          color: Color(0xFFfcd670),
+          text: "Gluten-Free"));
+    }
+    if (user.vegan == true) {
+      tags.add(
+        Tag(
+            textColor: Colors.orange[700],
+            color: Color(0xFFfcd670),
+            text: "Vegan"),
+      );
+    }
+    if (user.sustainable == true) {
+      tags.add(Tag(
+        text: "Sustainable",
+        textColor: Colors.brown[900],
+        color: Theme.of(context).highlightColor.withOpacity(0.8),
+      ));
+    }
     tiles.insert(
         0,
         Container(
           padding: EdgeInsets.only(left: Sc.h * 3, bottom: Sc.h * 6),
           child: Wrap(
-            alignment: WrapAlignment.start,
-            spacing: Sc.h * 3.5,
-            runSpacing: Sc.v * 1.5,
-            children: [
-              Tag(
-                textColor: Colors.green[900],
-                color: Theme.of(context).primaryColorDark,
-                text: "Vegan",
-              ),
-              Tag(
-                  textColor: Colors.orange[700],
-                  color: Color(0xFFfcd670),
-                  text: "Gluten-Free"),
-              Tag(
-                text: "Sustainable",
-                textColor: Colors.brown[900],
-                color: Theme.of(context).highlightColor.withOpacity(0.8),
-              ),
-            ],
-          ),
+              alignment: WrapAlignment.start,
+              spacing: Sc.h * 3.5,
+              runSpacing: Sc.v * 1.5,
+              children: tags),
         ));
     tiles.insert(
       0,

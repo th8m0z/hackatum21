@@ -21,11 +21,17 @@ class Tag extends StatelessWidget {
       height: 24,
       decoration: BoxDecoration(
         boxShadow: [
-          BoxShadow(
-            blurRadius: Sc.h * 2.5,
-            spreadRadius: Sc.h * 0.1,
-            color: color.withOpacity(0.5),
-          )
+          hasBoxShadow == true
+              ? BoxShadow(
+                  blurRadius: Sc.h * 2.5,
+                  spreadRadius: Sc.h * 0.1,
+                  color: color.withOpacity(0.5),
+                )
+              : BoxShadow(
+                  blurRadius: Sc.h * 2.5,
+                  spreadRadius: Sc.h * 0.1,
+                  color: Colors.transparent,
+                )
         ],
         color: color ?? Theme.of(context).primaryColorDark,
         borderRadius: BorderRadius.circular(40),
