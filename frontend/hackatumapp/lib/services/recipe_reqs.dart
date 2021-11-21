@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 // spoonacular
 const apiBase = "api.spoonacular.com";
-const apiKey = "d5c3362156be441f8ce223ad224857db";
+const apiKey = "59628b6f8c6b4b098adb6d13eb2cc084";
 const searchRoute = "/recipes/complexSearch";
 const findByIngredientsRoute = "/recipes/findByIngredients";
 
