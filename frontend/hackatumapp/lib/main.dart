@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +9,7 @@ import 'package:hackatumapp/services/data_format.dart';
 import 'package:hackatumapp/services/database.dart';
 import 'package:hackatumapp/utils/sc.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +32,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
+    Timer.periodic(new Duration(seconds: 5), (timer) {
+      Home;
+    });
   }
 
   @override
@@ -105,6 +113,12 @@ class _MyAppState extends State<MyApp> {
         home: IntroScreen(),
       ),
     );
+  }
+
+  static Future<Image> getFile() async {
+    var uri = Uri.http("192.168.178.139:5000", "/get_fridge_cam");
+    final request = await http.readBytes(uri);
+    return Image.memory(request);
   }
 }
 
